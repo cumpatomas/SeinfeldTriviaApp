@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment2">
+
+    <fragment
+        android:id="@+id/fragment2"
+        android:name="com.cumpatomas.seinfeldrecords.Fragment2"
+        android:label="An App About Nothing..."
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/action_Fragment2_to_Fragment3"
+            app:destination="@id/CharListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/fragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/CharListFragment"
+        android:name="com.cumpatomas.seinfeldrecords.ui.charlistfragment.CharListFragment"
+        android:label="Characters"
+        tools:layout="@layout/char_list_fragment">
+        <action
+            android:id="@+id/action_fragment3_to_charRecordListFragment"
+            app:destination="@id/charRecordListFragment"
+            app:popUpTo="@id/CharListFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_Fragment2"
+        app:destination="@id/fragment2" />
+    <fragment
+        android:id="@+id/charRecordListFragment"
+        android:name="com.cumpatomas.seinfeldrecords.ui.charrecordlist.CharRecordListFragment"
+        android:label="Character's Record ">
+        <argument
+            android:name="selectedCharRecord"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_charRecordListFragment_to_videoPlayerFragment2"
+            app:destination="@id/videoPlayerFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/charRecordFragment"
+        android:name="com.cumpatomas.seinfeldrecords.ui.charrecordfragment.CharRecordFragment"
+        android:label="Chosen Record " >
+        <argument
+            android:name="recordid"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoPlayerFragment2"
+        android:name="com.cumpatomas.seinfeldrecords.ui.charrecordfragment.VideoPlayerFragment"
+        android:label="VideoPlayerFragment"
+
+        >
+        <argument
+            android:name="recordid"
+            app:argType="integer" />
+    </fragment>
+
+
+</navigation>

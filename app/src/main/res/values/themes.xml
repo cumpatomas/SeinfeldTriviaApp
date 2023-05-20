@@ -1,0 +1,42 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.FragmentsExperiment" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/custom_blue</item>
+        <item name="colorPrimaryVariant">#EC5252</item>
+        <item name="colorOnPrimary">#A30404</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#ffbe3b</item>
+        <item name="colorSecondaryVariant">#ffff72</item>
+        <item name="colorOnSecondary">#c8b900</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/custom_blue</item>
+        <!-- Customize your theme here. -->
+
+
+
+    </style>
+
+    <style name="AppTheme.ToolbarFont" parent="AppTheme" >
+        <!--This line changes the color of text in Toolbar-->
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">@font/fenice_oblique</item>
+
+
+
+    </style>
+
+    <!-- Splash Screen Theme. -->
+    <style name="SplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_nothing</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="postSplashScreenTheme">@style/Theme.FragmentsExperiment</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+
+    </style>
+</resources>
