@@ -4,12 +4,12 @@ import androidx.room.Room
 
 object LocalDatabaseModule {
 
-    val db: RecordDatabase by lazy {
+    val db: UserDataBase by lazy {
         provideDatabase()
     }
 
-    private fun provideDatabase(): RecordDatabase {
-        return Room.databaseBuilder(ApplicationModule.applicationContext, RecordDatabase::class.java, "local_db").build()
+    private fun provideDatabase(): UserDataBase {
+        return Room.databaseBuilder(ApplicationModule.applicationContext, UserDataBase::class.java, "local_db").build()
     }
 }
 

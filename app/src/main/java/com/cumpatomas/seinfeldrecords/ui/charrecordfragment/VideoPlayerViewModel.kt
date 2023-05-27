@@ -18,14 +18,14 @@ class VideoPlayerViewModel: ViewModel() {
     val selectedChar = _selectedChar.asStateFlow()
 
     fun receiveArguments(recordid: Int?) {
-        this.id = recordid
+       /* this.id = recordid
         viewModelScope.launch(Dispatchers.IO) {
             val job = launch {
                 _selectedChar.value = getRecordById.invoke(this@VideoPlayerViewModel.id)
             }
             job.join()
         }
-
+*/
 
     }
 

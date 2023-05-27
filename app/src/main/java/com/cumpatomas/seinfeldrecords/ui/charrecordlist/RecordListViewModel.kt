@@ -21,7 +21,7 @@ class RecordListViewModel : ViewModel() {
 
     fun receiveArguments(selectedChar: String) {
         this.selectedChar = selectedChar
-        viewModelScope.launch(Dispatchers.IO) {
+      /*  viewModelScope.launch(Dispatchers.IO) {
 
             val recordListJob = launch {
                 _recordList.value = GetRecordListUseCase().invoke().filter {
@@ -31,7 +31,7 @@ class RecordListViewModel : ViewModel() {
             }
            recordListJob.join()
 
-        }
+        }*/
     }
 
 }

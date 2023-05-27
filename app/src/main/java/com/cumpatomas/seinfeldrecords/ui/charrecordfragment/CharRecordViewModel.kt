@@ -27,7 +27,7 @@ class CharRecordViewModel : ViewModel() {
 
     fun receiveArguments(id: Int) {
         this.id = id
-        viewModelScope.launch(Dispatchers.IO) {
+/*        viewModelScope.launch(Dispatchers.IO) {
             val job = launch {
 
                 _record.value = getRecordById.invoke(this@CharRecordViewModel.id)
@@ -35,7 +35,7 @@ class CharRecordViewModel : ViewModel() {
             job.join()
 
 
-        }
+        }*/
 
     }
 

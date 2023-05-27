@@ -6,8 +6,8 @@ import com.cumpatomas.seinfeldrecords.data.model.toDomain
 
 class GetRecordListUseCase {
 
-    suspend operator fun invoke(): List<CharRecord> {
+    /*suspend operator fun invoke(): List<CharRecord> {
         return LocalDatabaseModule.db.recordDao().getRecord().map { it.toDomain() }
-    }
+    }*/
 
 }

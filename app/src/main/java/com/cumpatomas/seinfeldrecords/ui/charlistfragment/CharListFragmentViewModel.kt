@@ -32,13 +32,13 @@ class CharListFragmentViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _viewState.send(CharListViewState(loading = true))
 
-            val saveRecordJob = launch {
+/*            val saveRecordJob = launch {
                 SaveCharRecordUseCase().invoke()
-            }
+            }*/
 
-            saveRecordJob.join()
+//            saveRecordJob.join()
 
-            _charRecords.value = GetRecordListUseCase().invoke()
+//            _charRecords.value = GetRecordListUseCase().invoke()
 
             delay(1000)
             _charList.value = CharListProvider.charList

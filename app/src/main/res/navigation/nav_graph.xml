@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment2"
-        android:name="com.cumpatomas.seinfeldrecords.Fragment2"
+        android:name="com.cumpatomas.seinfeldrecords.HomeFragment"
         android:label="An App About Nothing..."
         tools:layout="@layout/home_fragment">
         <action

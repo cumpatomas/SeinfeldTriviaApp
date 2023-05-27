@@ -16,7 +16,7 @@ class GetRandomScript() {
     )
 
     suspend operator fun invoke(link: String): List<String> {
-        val randomLines = mutableListOf<String>()
+        var randomLines = mutableListOf<String>()
         coroutineScope {
             launch {
                 val url = Jsoup.connect(link).get()
@@ -29,13 +29,30 @@ class GetRandomScript() {
                 }
             }
         }
-        /**
+/*        *//**
          * some scripts can't be scraped as they have different html format so in that case
          * we implement this function that take a random script from possibles episodes
-         */
-        return if (randomLines.size > 2) randomLines else {
+         *//*
+        return if (randomLines.size > 10) randomLines else {
             println("got ya!")
             invoke(listoOfLinks.shuffled().random())
+        }*/
+try {
+    val randomIndex = (10..randomLines.lastIndex - 7).random()
+    val outputList = mutableListOf<String>(randomLines[0])
+    if (randomLines[0].length > 20 || randomLines[0].contains(":")) {
+        coroutineScope {
+            launch {
+                invoke(listoOfLinks.random())
+            }.join()
         }
+    }
+
+    return outputList + randomLines.subList(randomIndex, randomIndex + 6)
+} catch (e: Exception) {
+    invoke(listoOfLinks.random())
+}
+        return randomLines
+
     }
 }

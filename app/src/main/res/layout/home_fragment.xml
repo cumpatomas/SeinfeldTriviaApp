@@ -4,18 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/custom_blue">
+    android:background="@color/custom_blue"
+    >
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/thumbnail_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvEpisodeTitle"
+        app:layout_constraintBottom_toTopOf="@+id/tvSolution"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gifContainer"
+            android:layout_width="250dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/frank_george"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/tvEpisodeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textColor="@color/white"
+        android:text="Chosse the correct Episode title"
+        android:fontFamily="@font/type_font"
+        app:layout_constraintVertical_weight="0.5"
+        android:paddingBottom="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/primaryColor"
         android:textSize="20sp"
-        android:paddingBottom="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,85 +61,166 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ScrollView
+        android:fillViewport="true"
+        android:id="@+id/scrollScript"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/answersContainer"
+        app:layout_constraintTop_toBottomOf="@+id/tvEpisodeTitle">
     <TextView
         android:id="@+id/tvScript"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/fenice_regular"
-        android:maxLines="15"
+        android:fontFamily="@font/type_font"
         android:textColor="@color/white"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEpisodeTitle"
+        android:textSize="17sp"
+        android:scrollbars = "vertical"
         tools:text="Hellooo" />
 
+
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/answersContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btNext"
+        android:visibility="gone"
+        app:layout_constraintVertical_weight="2"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/clBottomBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvScript">
+        app:layout_constraintTop_toBottomOf="@+id/scrollScript">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAnswer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardBackgroundColor="#4792A8">
         <TextView
             android:id="@+id/tvAnswer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="8dp"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/type_font"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvAnswer2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAnswer1" />
+        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tvAnswer3"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAnswer2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            app:cardBackgroundColor="#4792A8"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAnswer2" />
+            app:layout_constraintTop_toBottomOf="@id/cvAnswer1">
 
-        <TextView
-            android:id="@+id/tvAnswer4"
+            <TextView
+                android:id="@+id/tvAnswer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/type_font"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAnswer3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            app:cardBackgroundColor="#4792A8"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAnswer3" />
+            app:layout_constraintTop_toBottomOf="@id/cvAnswer2">
+
+            <TextView
+                android:id="@+id/tvAnswer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/type_font"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAnswer4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="#4792A8"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cvAnswer3">
+
+            <TextView
+                android:id="@+id/tvAnswer4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/type_font"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -118,25 +228,86 @@
         android:id="@+id/tvSolution"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textColor="@color/primaryColor"
+        android:textSize="22sp"
+        android:fontFamily="@font/type_font"
+        app:layout_constraintBottom_toTopOf="@+id/clBottomBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answersContainer" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btNext"
-        android:layout_width="wrap_content"
-        android:text="NEXT"
-        android:textColor="@color/white"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clBottomBarContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answersContainer" />
+        app:layout_constraintVertical_weight="1">
+
+        <TextView
+            android:id="@+id/tvCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="@color/primaryColor"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btNext" />
+
+
+        <Button
+            android:id="@+id/btNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="NEXT"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvPointsNumbers"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/char_name_bckgrd"
+            android:paddingTop="9dp"
+            android:text="120"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:flow_horizontalAlign="center"
+            app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--    <ImageView
+        android:id="@+id/ivPointsContainer"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/char_name_bckgrd"
+android:background="@drawable/char_name_bckgrd"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvPointsNumbers"
+        app:layout_constraintStart_toStartOf="@id/tvPointsNumbers"
+/>-->
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
