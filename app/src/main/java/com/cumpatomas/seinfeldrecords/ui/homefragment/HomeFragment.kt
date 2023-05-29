@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ScrollView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.databinding.HomeFragmentBinding
 import com.cumpatomas.seinfeldrecords.ui.homefragment.HomeFragmentViewModel
-import kotlinx.coroutines.Dispatchers
+import com.robinhood.ticker.TickerUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,7 +31,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
 
         _binding = HomeFragmentBinding.inflate(layoutInflater)
         return binding.root
@@ -51,38 +52,40 @@ class HomeFragment : Fragment() {
     }
 
     private fun initListeners() {
+
         lifecycleScope.launch() {
             binding.btNext.isEnabled = false
             viewModel.timer.collectLatest {
-                binding.tvCounter.text = it.toString()
-                if (it <= 5) binding.tvCounter.setTextColor(resources.getColor(R.color.red))
+                val ticker = binding.counterTickerView
+                ticker.setCharacterLists(TickerUtils.provideNumberList())
+                ticker.text = it.toString()
+                if (it <= 5) binding.counterTickerView.textColor = resources.getColor(R.color.red)
                 if (it == 0) {
+
                     binding.answersContainer.visibility = INVISIBLE
                     binding.btNext.isEnabled = true
+                    binding.gifTimeOut.isVisible = true
                 }
             }
         }
 
         binding.btNext.setOnClickListener {
-            viewModel.gifActive = false
-            binding.tvCounter.setTextColor(resources.getColor(R.color.primaryColor))
-            viewModel.resetCounter()
-            binding.btNext.isEnabled = false
-            binding.tvScript.text = ""
-            binding.tvCounter.setTextColor(resources.getColor(R.color.primaryColor))
-            binding.gifContainer.isGone = true
-            binding.tvSolution.text = ""
-            lifecycleScope.launch {
 
+
+            lifecycleScope.launch {
+                binding.scrollScript.scrollTo(0, 0)
+                binding.scrollScript.isVerticalScrollBarEnabled = true
                 launch {
-                    binding.answersContainer.isGone = true
+
                     viewModel.getNewScript()
                     binding.progressBar.isVisible = viewModel.loading.value
 
                 }.join()
-                getScriptText()
-                binding.tvScript.isVisible = true
-                binding.tvCounter.isVisible = true
+                launch {
+                    getScriptText()
+
+                }.join()
+                setNextVisibility()
             }
         }
         binding.cvAnswer1.setOnClickListener {
@@ -127,23 +130,42 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setNextVisibility() {
+        binding.gifTimeOut.isGone = true
+        viewModel.gifActive = false
+        binding.counterTickerView.textColor = resources.getColor(R.color.primaryColor)
+        viewModel.resetCounter()
+        binding.btNext.isEnabled = false
+        binding.counterTickerView.textColor = resources.getColor(R.color.primaryColor)
+        binding.gifContainer.isGone = true
+        binding.tvSolution.text = ""
+        binding.answersContainer.visibility = INVISIBLE
+        binding.tvScript.isVisible = true
+        binding.counterTickerView.isVisible = true
+    }
+
     private fun setWrongAnswerScreen() {
+        viewModel.countingJob?.cancel()
+        binding.scrollScript.isVerticalScrollBarEnabled = false
+        binding.gifTimeOut.isGone = true
         viewModel.gifActive = true
         val randomWrongGif = RandomGifProvider().randomWrongGif
-        viewModel.gifActive = true
         viewModel.correctAnswer = false
         binding.tvSolution.text = "Wrong!"
         binding.gifContainer.setImageResource(randomWrongGif.shuffled().random())
         binding.gifContainer.isVisible = true
         binding.answersContainer.isGone = true
         binding.tvScript.isGone = true
-        binding.tvCounter.isGone = true
+        binding.counterTickerView.isGone = true
         binding.btNext.isEnabled = true
-        binding.tvPointsNumbers.text = viewModel.userPoints.value.toString()
+        binding.pointsTickerView.text = viewModel.userPoints.value.toString()
         viewModel.resetCounter()
     }
 
     private fun setCorrectAnswerScreen() {
+        viewModel.countingJob?.cancel()
+        binding.scrollScript.isVerticalScrollBarEnabled = false
+        binding.gifTimeOut.isGone = true
         viewModel.gifActive = true
         val randomCorrectGif = RandomGifProvider().randomCorrectGif
         viewModel.gifActive = true
@@ -153,9 +175,9 @@ class HomeFragment : Fragment() {
         binding.gifContainer.isVisible = true
         binding.answersContainer.isGone = true
         binding.tvScript.isGone = true
-        binding.tvCounter.isGone = true
+        binding.counterTickerView.isGone = true
         binding.btNext.isEnabled = true
-        binding.tvPointsNumbers.text = viewModel.userPoints.value.toString()
+        binding.pointsTickerView.text = viewModel.userPoints.value.toString()
         viewModel.resetCounter()
     }
 
@@ -164,10 +186,12 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             lifecycleScope.launch {
-                launch(Dispatchers.IO) {
+                launch() {
 
                     viewModel.userPoints.collectLatest {
-                        binding.tvPointsNumbers.text = it.toString()
+                        val ticker = binding.pointsTickerView
+                        ticker.setCharacterLists(TickerUtils.provideNumberList())
+                        ticker.text = it.toString()
                     }
                 }
                 binding.answersContainer.visibility = INVISIBLE
@@ -177,28 +201,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun getScriptText() {
+        binding.tvScript.text = ""
         lifecycleScope.launch {
             launch {
+                delay(800)
                 viewModel.list.collectLatest { scriptList ->
                     binding.tvScript.text =
-                        scriptList.filter { it.contains(":") }.drop(1).joinToString("\n\n")
+                        scriptList.filter { it.isNotEmpty() }.drop(1).joinToString("\n\n")
                             .replace("%", "")
-                    if (binding.tvScript.text.isBlank()) {
-                        launch {
-                            viewModel.countingJob?.cancel()
-                            viewModel.getNewScript()
-                        }.join()
-                    }
                     correctTitle = scriptList.firstOrNull().toString()
-                    if (correctTitle.contains(":") || correctTitle.length > 20) {
-
-                        launch {
-                            viewModel.countingJob?.cancel()
-                            viewModel.getNewScript()
-                        }.join()
-
-                        correctTitle = scriptList.firstOrNull().toString()
-                    }
                     if (correctTitle.contains(":") || correctTitle.length > 20) {
                         println("Put episode with this line in blacklist:")
                         println(correctTitle)
@@ -206,25 +217,26 @@ class HomeFragment : Fragment() {
                     viewModel.titlesList.collectLatest { titlesList ->
                         val editList = titlesList.shuffled().take(3).toMutableList()
                         if (titlesList.size > 2) {
-                            if (correctTitle != "null") {
-                                editList.add(correctTitle)
-                                binding.tvAnswer1.text = editList.random()
-                                editList.remove(binding.tvAnswer1.text)
-                                binding.tvAnswer2.text = editList.random()
-                                editList.remove(binding.tvAnswer2.text)
-                                binding.tvAnswer3.text = editList.random()
-                                editList.remove(binding.tvAnswer3.text)
-                                binding.tvAnswer4.text = editList.random()
-                                editList.remove(binding.tvAnswer4.text)
-                            } else editList.add("")
-                            println("correcttitle: $correctTitle")
-                            binding.progressBar.isVisible = false
-                            delay(200)
+                            launch {
+                                if (correctTitle != "null") {
+                                    editList.add(correctTitle)
+                                    binding.tvAnswer1.text = editList.random()
+                                    editList.remove(binding.tvAnswer1.text)
+                                    binding.tvAnswer2.text = editList.random()
+                                    editList.remove(binding.tvAnswer2.text)
+                                    binding.tvAnswer3.text = editList.random()
+                                    editList.remove(binding.tvAnswer3.text)
+                                    binding.tvAnswer4.text = editList.random()
+                                    editList.remove(binding.tvAnswer4.text)
+                                } else editList.add("")
+                                println("correcttitle: $correctTitle")
+                                binding.progressBar.isVisible = false
+                                delay(500)
+                            }.join()
                             if (!viewModel.gifActive && viewModel.timer.value != 0)
-                                binding.answersContainer.isVisible = true
+                                binding.answersContainer.visibility = VISIBLE
                         }
                     }
-
                 }
             }
         }

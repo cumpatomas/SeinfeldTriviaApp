@@ -37,32 +37,31 @@ class HomeFragmentViewModel : ViewModel() {
     val updatePoints = SaveUserPoints()
 
     init {
-
         viewModelScope.launch() {
             _userPoints.value = getPoints.invoke()
             getNewScript()
         }
-
     }
 
     suspend fun getNewScript() {
         var randomLines = listOf<String>()
         _loading.value = true
         viewModelScope.launch(IO) {
-            _list.value = emptyList()
-            _titlesList.value = emptyList<String>().toMutableList()
             launch {
                 urls = scraping.invoke()
             }.join()
             launch {
                 randomLines = script.invoke(urls.shuffled().random())
             }.join()
+            println("randomLines: ")
+            println(randomLines)
+            _list.value = emptyList()
             for (i in randomLines) {
                 _list.value += i
             }
             println(_list.value)
             counting()
-
+            _titlesList.value = emptyList<String>().toMutableList()
             _titlesList.value =
                 urls.map { it.substringAfterLast("/").substringBefore(".") }.toMutableList()
             val tempList = mutableListOf<String>()
@@ -73,11 +72,7 @@ class HomeFragmentViewModel : ViewModel() {
             _titlesList.value = tempList.shuffled().take(3).toMutableList()
             println("titulos")
             println(_titlesList.value)
-
-
-
         }
-
     }
 
     fun resetCounter() {

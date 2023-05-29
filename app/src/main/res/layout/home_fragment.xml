@@ -7,6 +7,13 @@
     android:background="@color/custom_blue"
     >
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/white_paper_png"/>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/thumbnail_card"
@@ -36,14 +43,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="Chosse the correct Episode title"
+        android:text="Choose the correct episode"
         android:fontFamily="@font/type_font"
         app:layout_constraintVertical_weight="0.5"
         android:paddingBottom="16dp"
         android:textAlignment="center"
-        android:textColor="@color/primaryColor"
+        android:textColor="#323030"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,10 +59,11 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
-        android:indeterminate="true"
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/custom_blue"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +74,11 @@
         android:id="@+id/scrollScript"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:verticalScrollbarPosition="right"
+android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintVertical_weight="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,19 +91,39 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/type_font"
-        android:textColor="@color/white"
-        android:textSize="17sp"
+        android:textColor="#323030"
+        android:textSize="15sp"
         android:scrollbars = "vertical"
         tools:text="Hellooo" />
 
 
     </ScrollView>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/scrollScript"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gifTimeOut"
+            android:layout_width="250dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/newman_waiting"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.cardview.widget.CardView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/answersContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintVertical_weight="2"
         android:layout_marginTop="4dp"
         app:layout_constraintBottom_toTopOf="@+id/clBottomBarContainer"
@@ -231,8 +264,8 @@
         android:layout_marginBottom="24dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="@color/primaryColor"
-        android:textSize="22sp"
+        android:textColor="#323030"
+        android:textSize="25sp"
         android:fontFamily="@font/type_font"
         app:layout_constraintBottom_toTopOf="@+id/clBottomBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
@@ -242,12 +275,15 @@
         android:id="@+id/clBottomBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_weight="1">
 
-        <TextView
+        <!--        <TextView
             android:id="@+id/tvCounter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -260,7 +296,23 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btNext" />
+            app:layout_constraintStart_toEndOf="@+id/btNext" />-->
+
+        <com.robinhood.ticker.TickerView
+            android:id="@+id/counterTickerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:textColor="@color/primaryColor"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:ticker_animationDuration="500"
+
+            />
 
 
         <Button
@@ -274,7 +326,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
+        <!--        <TextView
             android:id="@+id/tvPointsNumbers"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -283,7 +335,7 @@
             android:paddingTop="9dp"
             android:text="120"
             android:textAlignment="center"
-            android:textColor="@color/red"
+            android:textColor="#D84040"
             android:textSize="22sp"
             android:textStyle="bold"
             app:flow_horizontalAlign="center"
@@ -291,7 +343,46 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
 
-            />
+            />-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:padding="8dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:background="@drawable/char_name_bckgrd"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/type_font"
+        android:foregroundGravity="bottom"
+        android:gravity="center_horizontal"
+        android:text="points"
+        android:textSize="13sp"
+        android:paddingBottom="4dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.robinhood.ticker.TickerView
+        android:id="@+id/pointsTickerView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#D84040"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:flow_horizontalAlign="center"
+        app:flow_verticalAlign="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

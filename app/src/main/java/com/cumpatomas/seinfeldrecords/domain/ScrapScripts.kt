@@ -3,11 +3,11 @@ package com.cumpatomas.seinfeldrecords.domain
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 
 class ScrapScripts {
 
-    val blackList = listOf(
+    private val blackList = listOf(
+        "https://www.seinfeldscripts.com/TheMasseuse.html",
         "https://www.seinfeldscripts.com/TheDeal.htm",
         "https://www.seinfeldscripts.com/TheNote.html",
     "https://www.seinfeldscripts.com/TheCafe.html",
@@ -76,7 +76,12 @@ class ScrapScripts {
     "https://www.seinfeldscripts.com/The-Clip-Show-1.html",
     "https://www.seinfeldscripts.com/The-Clip-Show-2.html",
         "https://www.seinfeldscripts.com/TheSeinfeldChronicles.htm",
-        "https://www.seinfeldscripts.com/TheSuzie.htm"
+        "https://www.seinfeldscripts.com/TheSuzie.htm",
+        "https://www.seinfeldscripts.com/ThePostponement.html",
+        "https://www.seinfeldscripts.com/TheStranded.html",
+        "https://www.seinfeldscripts.com/TheOpera.html",
+        "https://www.seinfeldscripts.com/TheTrip1.htm",
+        "https://www.seinfeldscripts.com/TheTrip2.htm"
     )
     suspend operator fun invoke(): MutableList<String> {
 
@@ -89,12 +94,17 @@ class ScrapScripts {
 
                 for (i in 15..table.lastIndex - 16) {
                     if (table[i].toString().contains(".htm")) {
-                        outputList.add("https://www.seinfeldscripts.com/" + table[i].toString().substringAfter("\"").substringBefore("\"").trim())
+                        outputList.add(
+                            "https://www.seinfeldscripts.com/" + table[i].toString()
+                                .substringAfter("\"").substringBefore("\"").trim()
+                        )
 
                     }
                 }
             }
         }
+        /*        println("lista filtrada:")
+        println(outputList.filter { it !in blackList }.toMutableList())*/
         return outputList.filter { it !in blackList }.toMutableList()
 
     }

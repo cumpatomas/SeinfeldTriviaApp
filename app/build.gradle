@@ -119,6 +119,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //Ticker
+    implementation 'com.robinhood.ticker:ticker:2.0.4'
 
 
 }
