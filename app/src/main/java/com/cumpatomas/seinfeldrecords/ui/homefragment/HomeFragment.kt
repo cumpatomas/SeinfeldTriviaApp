@@ -133,10 +133,9 @@ class HomeFragment : Fragment() {
     private fun setNextVisibility() {
         binding.gifTimeOut.isGone = true
         viewModel.gifActive = false
-        binding.counterTickerView.textColor = resources.getColor(R.color.primaryColor)
+        binding.counterTickerView.textColor = resources.getColor(R.color.custom_blue)
         viewModel.resetCounter()
         binding.btNext.isEnabled = false
-        binding.counterTickerView.textColor = resources.getColor(R.color.primaryColor)
         binding.gifContainer.isGone = true
         binding.tvSolution.text = ""
         binding.answersContainer.visibility = INVISIBLE
