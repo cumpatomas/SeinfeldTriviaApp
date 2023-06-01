@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,10 +15,13 @@ import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.databinding.HomeFragmentBinding
 import com.cumpatomas.seinfeldrecords.ui.homefragment.HomeFragmentViewModel
 import com.robinhood.ticker.TickerUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeFragmentViewModel by viewModels()
     private var _binding: HomeFragmentBinding? = null

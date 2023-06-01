@@ -4,8 +4,9 @@ import android.util.Log
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
-class GetRandomScript() {
+class GetRandomScript@Inject constructor() {
     val listoOfLinks = listOf<String>(
         "https://www.seinfeldscripts.com/TheWigMaster.htm",
         "https://www.seinfeldscripts.com/TheApartment.htm",

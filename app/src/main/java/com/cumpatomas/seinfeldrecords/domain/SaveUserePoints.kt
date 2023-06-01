@@ -1,11 +1,13 @@
 package com.cumpatomas.seinfeldrecords.domain
 
-import com.cumpatomas.seinfeldrecords.data.database.LocalDatabaseModule
-import com.cumpatomas.seinfeldrecords.data.database.entities.UserEntity
+import com.cumpatomas.seinfeldrecords.data.database.UserDao
+import javax.inject.Inject
 
-class SaveUserPoints {
+class SaveUserPoints@Inject constructor(
+    private val userDao: UserDao
+){
     suspend operator fun invoke(points: Int) {
 
-LocalDatabaseModule.db.userDao().updatePoints(points)
+        userDao.updatePoints(points)
     }
 }

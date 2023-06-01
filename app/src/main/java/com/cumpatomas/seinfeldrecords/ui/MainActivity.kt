@@ -6,28 +6,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.*
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.data.database.ApplicationModule
 import com.cumpatomas.seinfeldrecords.databinding.ActivityMainBinding
-import com.cumpatomas.seinfeldrecords.R
-import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import org.jsoup.nodes.Document
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    val scraping = ScrapScripts()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         setNavigationIcon()
         setupActionBarWithNavController(navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.topAppBar, navController)
-//        scrapingService()
 
     }
 

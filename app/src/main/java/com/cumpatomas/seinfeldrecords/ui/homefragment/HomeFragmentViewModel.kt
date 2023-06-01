@@ -8,6 +8,7 @@ import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -15,10 +16,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeFragmentViewModel : ViewModel() {
-    private val scraping = ScrapScripts()
-    private val script = GetRandomScript()
+@HiltViewModel
+class HomeFragmentViewModel @Inject constructor(
+    private val scraping : ScrapScripts,
+    private val script: GetRandomScript,
+    private val getPoints: GetUserPoints,
+    private val updatePoints: SaveUserPoints
+    ) : ViewModel() {
     private val _list = MutableStateFlow<List<String>>(emptyList())
     val list = _list.asStateFlow()
     private var urls = emptyList<String>()
@@ -33,8 +39,6 @@ class HomeFragmentViewModel : ViewModel() {
     var correctAnswer = false
     private val _userPoints = MutableStateFlow<Int>(0)
     val userPoints = _userPoints.asStateFlow()
-    val getPoints = GetUserPoints()
-    val updatePoints = SaveUserPoints()
 
     init {
         viewModelScope.launch() {

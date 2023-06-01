@@ -7,7 +7,7 @@ import com.cumpatomas.seinfeldrecords.data.database.entities.UserEntity
 
 @Database(entities = [ UserEntity::class ], version=1, exportSchema = false)
 @TypeConverters(RecordConverters::class)
-abstract class UserDataBase : RoomDatabase() {
+abstract class LocalDataBase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
 

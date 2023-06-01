@@ -1,14 +1,17 @@
 package com.cumpatomas.seinfeldrecords.domain
 
-import com.cumpatomas.seinfeldrecords.data.database.LocalDatabaseModule
+import com.cumpatomas.seinfeldrecords.data.database.UserDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.UserEntity
+import javax.inject.Inject
 
-class GetUserPoints {
+class GetUserPoints@Inject constructor(
+    private val userDao: UserDao
+) {
     suspend operator fun invoke(): Int {
 
-        if (LocalDatabaseModule.db.userDao().checkIfUserExists().isEmpty()) {
-            LocalDatabaseModule.db.userDao().InsertUserEntity(UserEntity())
+        if (userDao.checkIfUserExists().isEmpty()) {
+            userDao.InsertUserEntity(UserEntity())
         }
-        return LocalDatabaseModule.db.userDao().getPoints()
+        return userDao.getPoints()
     }
 }
