@@ -2,8 +2,9 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
+import com.cumpatomas.seinfeldrecords.data.network.QuestionService
+import com.cumpatomas.seinfeldrecords.data.network.ResponseEvent
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
@@ -16,14 +17,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.stream.Collectors.counting
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeFragmentViewModel @Inject constructor(
     private val scraping : ScrapScripts,
     private val script: GetRandomScript,
-    private val getPoints: GetUserPoints,
-    private val updatePoints: SaveUserPoints
+    val getPoints: GetUserPoints,
+    private val updatePoints: SaveUserPoints,
     ) : ViewModel() {
     private val _list = MutableStateFlow<List<String>>(emptyList())
     val list = _list.asStateFlow()
@@ -37,6 +39,7 @@ class HomeFragmentViewModel @Inject constructor(
     var timerOn = true
     var gifActive = false
     var correctAnswer = false
+    var timeOut = false
     private val _userPoints = MutableStateFlow<Int>(0)
     val userPoints = _userPoints.asStateFlow()
 
@@ -46,6 +49,7 @@ class HomeFragmentViewModel @Inject constructor(
             getNewScript()
         }
     }
+
 
     suspend fun getNewScript() {
         var randomLines = listOf<String>()
@@ -88,7 +92,7 @@ class HomeFragmentViewModel @Inject constructor(
         }
     }
 var countingJob: Job? = null
-    fun counting() {
+    private fun counting() {
         var count = 15
         _timer.value = 15
          countingJob = viewModelScope.launch {
@@ -116,6 +120,13 @@ var countingJob: Job? = null
                 updatePoints.invoke(_userPoints.value)
                 getPoints.invoke()
             }.join()
+        }
+    }
+
+    fun getPoints() {
+
+        viewModelScope.launch() {
+            _userPoints.value = getPoints.invoke()
         }
     }
 }

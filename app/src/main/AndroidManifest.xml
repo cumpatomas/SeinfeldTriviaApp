@@ -17,12 +17,13 @@
         android:theme="@style/SplashScreenTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31"
-        android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
         >
 
         <activity
             android:name="com.cumpatomas.seinfeldrecords.ui.MainActivity"
-            android:exported="true">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

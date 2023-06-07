@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragment2">
+    app:startDestination="@id/HomeFragment">
 
     <fragment
-        android:id="@+id/fragment2"
+        android:id="@+id/HomeFragment"
         android:name="com.cumpatomas.seinfeldrecords.HomeFragment"
         android:label="An App About Nothing..."
         tools:layout="@layout/home_fragment">
@@ -15,7 +15,13 @@
             app:destination="@id/CharListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
-            app:popUpTo="@id/fragment2" />
+            app:popUpTo="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_quizFragment"
+            app:destination="@id/QuizFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/HomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/CharListFragment"
@@ -29,7 +35,7 @@
     </fragment>
     <action
         android:id="@+id/action_global_Fragment2"
-        app:destination="@id/fragment2" />
+        app:destination="@id/HomeFragment" />
     <fragment
         android:id="@+id/charRecordListFragment"
         android:name="com.cumpatomas.seinfeldrecords.ui.charrecordlist.CharRecordListFragment"
@@ -59,6 +65,10 @@
             android:name="recordid"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/QuizFragment"
+        android:name="com.cumpatomas.seinfeldrecords.ui.quizFragment.QuizFragment"
+        android:label="Quiz time!" />
 
 
 </navigation>

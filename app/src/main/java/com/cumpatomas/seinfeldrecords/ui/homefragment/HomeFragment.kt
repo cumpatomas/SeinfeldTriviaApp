@@ -10,7 +10,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.databinding.HomeFragmentBinding
 import com.cumpatomas.seinfeldrecords.ui.homefragment.HomeFragmentViewModel
@@ -41,6 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initCollectors()
         initListeners()
+        viewModel.getPoints
         if (viewModel.gifActive) {
             setScreen()
         }
@@ -63,7 +66,11 @@ class HomeFragment : Fragment() {
                 ticker.text = it.toString()
                 if (it <= 5) binding.counterTickerView.textColor = resources.getColor(R.color.red)
                 if (it == 0) {
-
+                    println("out of time baby!")
+                     if (!viewModel.timeOut ) {
+                         viewModel.setPoints(-2)
+                     }
+                    viewModel.timeOut = true
                     binding.answersContainer.visibility = INVISIBLE
                     binding.btNext.isEnabled = true
                     binding.gifTimeOut.isVisible = true
@@ -73,7 +80,7 @@ class HomeFragment : Fragment() {
 
         binding.btNext.setOnClickListener {
 
-
+            viewModel.timeOut = false
             lifecycleScope.launch {
                 binding.scrollScript.scrollTo(0, 0)
                 binding.scrollScript.isVerticalScrollBarEnabled = true
@@ -186,8 +193,12 @@ class HomeFragment : Fragment() {
     private fun initCollectors() {
 
         lifecycleScope.launch {
-            lifecycleScope.launch {
-                launch() {
+            launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.getPoints()
+                }
+            }
+            launch() {
 
                     viewModel.userPoints.collectLatest {
                         val ticker = binding.pointsTickerView
@@ -197,8 +208,8 @@ class HomeFragment : Fragment() {
                 }
                 binding.answersContainer.visibility = INVISIBLE
                 getScriptText()
-            }
         }
+
     }
 
     private fun getScriptText() {

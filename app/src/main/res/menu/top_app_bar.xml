@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/fragment2"
+        android:id="@+id/HomeFragment"
         android:icon="@drawable/ic_home"
         android:title="Home"
         android:contentDescription="description!"
@@ -14,6 +14,13 @@
         android:title="Characters"
         android:contentDescription="description..."
         app:showAsAction="ifRoom" />
+
+    <item
+    android:id="@+id/QuizFragment"
+    android:icon="@drawable/question_mark_24"
+    android:iconTint="@color/white"
+    android:title="Quiz"
+    app:showAsAction="ifRoom" />
 
 
 </menu>

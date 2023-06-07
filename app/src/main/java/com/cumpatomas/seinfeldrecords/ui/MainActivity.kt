@@ -44,8 +44,9 @@ class MainActivity : AppCompatActivity() {
     private fun setAppBarConfig() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.fragment2, // setea el fragment como HOME
-                R.id.CharListFragment, // setea el fragment como HOME
+                R.id.HomeFragment,
+                R.id.CharListFragment,
+                R.id.QuizFragment,
 
             )
         )

@@ -1,10 +1,6 @@
 package com.cumpatomas.seinfeldrecords.domain
 
 import com.cumpatomas.seinfeldrecords.data.CharRecordProvider
-import com.cumpatomas.seinfeldrecords.data.database.LocalDatabaseModule
-import com.cumpatomas.seinfeldrecords.data.database.entities.RecordEntity
-import com.cumpatomas.seinfeldrecords.data.database.entities.toEntity
-import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 
 class SaveCharRecordUseCase {
 
