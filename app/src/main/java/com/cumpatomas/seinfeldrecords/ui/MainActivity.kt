@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.HomeFragment,
                 R.id.CharListFragment,
                 R.id.QuizFragment,
+                R.id.QuotesFragment,
 
             )
         )

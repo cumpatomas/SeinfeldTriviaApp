@@ -22,5 +22,12 @@
     android:title="Quiz"
     app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/QuotesFragment"
+        android:icon="@drawable/baseline_format_quote_24"
+        android:iconTint="@color/white"
+        android:title="Quotes"
+        app:showAsAction="ifRoom" />
+
 
 </menu>

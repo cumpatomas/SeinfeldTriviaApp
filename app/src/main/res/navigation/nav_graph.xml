@@ -22,6 +22,12 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_quotesFragment"
+            app:destination="@id/QuotesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/HomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/CharListFragment"
@@ -69,6 +75,10 @@
         android:id="@+id/QuizFragment"
         android:name="com.cumpatomas.seinfeldrecords.ui.quizFragment.QuizFragment"
         android:label="Quiz time!" />
+    <fragment
+        android:id="@+id/QuotesFragment"
+        android:name="com.cumpatomas.seinfeldrecords.ui.quotesfragment.QuotesFragment"
+        android:label="Quotes" />
 
 
 </navigation>
