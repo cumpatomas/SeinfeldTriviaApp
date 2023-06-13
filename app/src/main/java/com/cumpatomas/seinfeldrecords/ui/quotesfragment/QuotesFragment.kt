@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -27,10 +26,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -80,8 +81,10 @@ class QuotesFragment : Fragment() {
 
             val list = viewModel.quotesListViewModel.collectAsState()
 
+            val loading = viewModel.isLoading.collectAsState()
+
             val quotesListSize = remember {
-                mutableStateOf(0)
+                mutableStateOf<Int?>(0)
             }
 
             Surface(
@@ -90,7 +93,7 @@ class QuotesFragment : Fragment() {
             ) {
 
                 LongPressDraggable(modifier = Modifier.fillMaxSize()) {
-                    QuotesLazyColumn(list.value, viewModel, quotesListSize)
+                    QuotesLazyColumn(list.value, loading)
                     PersonListContainer(viewModel, quotesListSize)
                 }
             }
@@ -98,37 +101,56 @@ class QuotesFragment : Fragment() {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun QuotesLazyColumn(
     quotesList: List<QuoteItem>,
-    viewModel: QuotesFragmentViewModel,
-    quotesListSize: MutableState<Int>
+    loading: State<Boolean>
 ) {
-    quotesListSize.value = quotesList.count { !it.isAnswered.value }
+
+    if (loading.value) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.62f)
+            .padding(top = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+            CircularProgressIndicator(color = Color.Yellow, modifier = Modifier.size(40.dp),
+                strokeWidth = 5.dp)
+        }
+
+
+    } else {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.7f),
+            .fillMaxHeight(0.62f)
+            .padding(bottom = 8.dp),
+        verticalArrangement = Arrangement.Center,
+
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
-        items(items = quotesList.distinct()) { quote ->
+        items(items = quotesList.take(3)) { quote ->
 
-            if (!quote.isAnswered.value)
-                QuoteItemCard(quoteItem = quote)
+                if (!quote.isAnswered.value)
+                    QuoteItemCard(quoteItem = quote)
+            }
         }
-if (quotesListSize.value == 0) viewModel.updateList()
-
     }
+
 }
+
 
 @Composable
 fun BoxScope.PersonListContainer(
     viewModel: QuotesFragmentViewModel,
-    quotesListSize: MutableState<Int>
+    quotesListSize: MutableState<Int?>
 ) {
     LazyVerticalGrid(
         modifier = Modifier
-            .wrapContentHeight()
+            .fillMaxHeight(0.38f)
             .fillMaxWidth()
             .background(
                 Color.LightGray,
@@ -136,6 +158,7 @@ fun BoxScope.PersonListContainer(
             )
             .padding(vertical = 10.dp, horizontal = 4.dp)
             .align(Alignment.BottomCenter),
+        verticalArrangement = Arrangement.Center,
         columns = GridCells.Fixed(count = 2)
     ) {
 
@@ -150,7 +173,7 @@ fun BoxScope.PersonListContainer(
 fun PersonCard(
     person: Person,
     viewModel: QuotesFragmentViewModel,
-    quotesListSize: MutableState<Int>
+    quotesListSize: MutableState<Int?>
 ) {
     val quoteItems = remember {
         mutableStateMapOf<Int, QuoteItem>()
@@ -167,16 +190,26 @@ fun PersonCard(
             Color.White
         }
         authorItem?.let {
+
             if (isInBound) {
                 if (it.author == person.name) {
 
                     println("Right!!")
+                    println(person.name + " " + it.author)
+
                 } else {
 
                     println("wrong!")
+                    println(person.name + " " + it.author)
+
                 }
                 it.isAnswered.value = true
-                quotesListSize.value --
+                quotesListSize.value = quotesListSize.value?.plus(1)
+                if (quotesListSize.value == 3) {
+                    quotesListSize.value = 0
+                    viewModel.updateList()
+                }
+
                 println(quotesListSize.value)
             }
         }

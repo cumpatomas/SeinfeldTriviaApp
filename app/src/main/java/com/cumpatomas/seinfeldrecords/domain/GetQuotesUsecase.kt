@@ -60,9 +60,9 @@ class GetQuotesUsecase @Inject constructor(
         }
         println("Quotes: $quotesItemsList")
 
-//        return if (quotesItemsList.size > 10) quotesItemsList.shuffled() else invoke()
+        return if (quotesItemsList.size > 2) quotesItemsList.distinct().shuffled() else invoke()
 
-        return quotesItemsList.distinct().shuffled()
+//        return quotesItemsList.distinct().shuffled()
     }
 
 }
