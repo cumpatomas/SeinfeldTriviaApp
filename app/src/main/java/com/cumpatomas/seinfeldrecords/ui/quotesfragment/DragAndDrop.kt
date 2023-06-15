@@ -63,7 +63,6 @@ fun <T> DragTarget(
     dataToDrop: T,
     content: @Composable (() -> Unit)
 ) {
-
     var currentPosition by remember { mutableStateOf(Offset.Zero) }
     val currentState = LocalDragTargetInfo.current
 
@@ -97,7 +96,6 @@ fun <T> DropTarget(
     modifier: Modifier,
     content: @Composable() (BoxScope.(isInBound: Boolean, data: T?) -> Unit)
 ) {
-
     val dragInfo = LocalDragTargetInfo.current
     val dragPosition = dragInfo.dragPosition
     val dragOffset = dragInfo.dragOffset

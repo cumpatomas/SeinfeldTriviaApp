@@ -4,15 +4,107 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryLightColor">
+    android:background="@color/custom_blue">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/pointsContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.compose.ui.platform.ComposeView>
+
+
+    <TextView
+        android:id="@+id/tvChapterTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="32dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:fontFamily="@font/type_font"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/primaryColor"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pointsContainer" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieWellDone"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pointsContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_url="https://assets10.lottiefiles.com/packages/lf20_pKiaUR.json" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieNope"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pointsContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_url="https://assets10.lottiefiles.com/private_files/lf30_pJuGaH.json" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pointsContainer"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/char_name_bckgrd"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/type_font"
+            android:foregroundGravity="bottom"
+            android:gravity="center_horizontal"
+            android:paddingBottom="4dp"
+            android:text="points"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <com.robinhood.ticker.TickerView
+            android:id="@+id/quizPointsTickerView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="#D84040"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:flow_horizontalAlign="center"
+            app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:ticker_animationDuration="1500" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
