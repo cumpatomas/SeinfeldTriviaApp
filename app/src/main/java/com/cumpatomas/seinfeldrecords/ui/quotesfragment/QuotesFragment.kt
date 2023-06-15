@@ -146,7 +146,7 @@ private fun QuotesLazyColumn(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.62f)
+                .fillMaxHeight(0.7f)
                 .padding(top = 24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -161,7 +161,7 @@ private fun QuotesLazyColumn(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.8f)
+                .fillMaxHeight(0.7f)
                 .padding(bottom = 8.dp),
 //            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -173,7 +173,7 @@ private fun QuotesLazyColumn(
                     text = "Hold and drag the line to it's author",
                     color = colorResource(id = R.color.primaryColor),
                     fontFamily = FontFamily(Font(R.font.type_font)),
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -200,7 +200,7 @@ fun BoxScope.PersonListContainer(
 ) {
     LazyRow(
         modifier = Modifier
-            .fillMaxHeight(0.2f)
+            .fillMaxHeight(0.3f)
             .fillMaxWidth()
             .background(
                 colorResource(id = R.color.transparent),

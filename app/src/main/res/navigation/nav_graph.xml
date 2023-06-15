@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/HomeFragment">
+    app:startDestination="@id/CharListFragment">
 
     <fragment
         android:id="@+id/HomeFragment"
         android:name="com.cumpatomas.seinfeldrecords.HomeFragment"
-        android:label="An App About Nothing..."
+        android:label="Script"
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/action_Fragment2_to_Fragment3"

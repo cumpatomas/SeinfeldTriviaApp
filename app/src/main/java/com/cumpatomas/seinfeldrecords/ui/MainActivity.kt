@@ -44,8 +44,9 @@ class MainActivity : AppCompatActivity() {
     private fun setAppBarConfig() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.HomeFragment,
+
                 R.id.CharListFragment,
+                R.id.HomeFragment,
                 R.id.QuizFragment,
                 R.id.QuotesFragment,
 
