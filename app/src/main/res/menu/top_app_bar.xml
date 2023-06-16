@@ -28,7 +28,7 @@
         android:id="@+id/QuotesFragment"
         android:icon="@drawable/baseline_format_quote_24"
         android:iconTint="@color/white"
-        android:title="Quotes"
+        android:title="Lines"
         app:showAsAction="ifRoom" />
 
 

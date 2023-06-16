@@ -78,7 +78,7 @@
     <fragment
         android:id="@+id/QuotesFragment"
         android:name="com.cumpatomas.seinfeldrecords.ui.quotesfragment.QuotesFragment"
-        android:label="Quotes" />
+        android:label="Give me the lines..." />
 
 
 </navigation>
