@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="8dp"
+    android:background="@color/custom_blue"
+    tools:context=".ui.chargestures.CharGesturesFragment">
+
+    <TextView
+        android:id="@+id/tvExplanation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/type_font"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="     Play the audio and guess the face..."
+        android:fadingEdge="horizontal"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clButtonAndImageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:flow_verticalAlign="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvExplanation">
+
+<!--        <ImageView
+            android:id="@+id/btPlayThePhrase"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:elevation="10dp"
+            android:src="@drawable/button_play_active3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+ />-->
+
+        <ImageView
+            android:id="@+id/btPlayThePhrase"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:fontFamily="@font/button_font"
+            android:paddingTop="5sp"
+            android:elevation="12dp"
+            android:src="@drawable/button_play"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieSound"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_colorFilter="@color/primaryColor"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/sound_json"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCharGesturesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clButtonAndImageContainer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

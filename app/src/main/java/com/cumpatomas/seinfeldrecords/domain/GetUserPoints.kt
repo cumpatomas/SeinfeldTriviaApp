@@ -10,7 +10,7 @@ class GetUserPoints@Inject constructor(
     suspend operator fun invoke(): Int {
 
         if (userDao.checkIfUserExists().isEmpty()) {
-            userDao.InsertUserEntity(UserEntity())
+            userDao.insertUserEntity(UserEntity())
         }
         return userDao.getPoints()
     }

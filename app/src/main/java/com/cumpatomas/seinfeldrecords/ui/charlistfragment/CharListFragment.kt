@@ -22,9 +22,7 @@ import com.cumpatomas.seinfeldrecords.databinding.CharListFragmentBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 class CharListFragment : Fragment() {
-
     private val viewmodel: CharListFragmentViewModel by viewModels()
     private val adapter = CharListFragmentAdapter()
     private var _binding: CharListFragmentBinding? = null
@@ -35,11 +33,9 @@ class CharListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = CharListFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.tvLoading.isGone = true
@@ -47,38 +43,29 @@ class CharListFragment : Fragment() {
         initCollectors()
         initRecyclerView()
         setLottieAnimation()
-
-
     }
 
     private fun setLottieAnimation() {
-
         binding.tvLoading.setAnimation(R.raw.loading_yellow_white)
         binding.tvLoading.repeatMode = LottieDrawable.RESTART
         binding.tvLoading.bringToFront()
-
     }
 
-
     private fun initListeners() {
-
-
         adapter.onItemClickListener = {
-        val action: NavDirections = CharListFragmentDirections.actionFragment3ToCharRecordListFragment(it.name)
+            val action: NavDirections =
+                CharListFragmentDirections.actionCharListFragmentToCharGesturesFragment("Kramer")
             findNavController().navigate(action)
-
-            }
+        }
     }
 
     private fun initCollectors() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
                 launch {
                     viewmodel.charList.collectLatest { list ->
                         updateList(list)
                     }
-
                 }
 
                 launch {
@@ -92,7 +79,6 @@ class CharListFragment : Fragment() {
                         adapter.charRecords = records
                     }
                 }
-
             }
         }
     }
@@ -101,7 +87,6 @@ class CharListFragment : Fragment() {
         adapter.setList(list)
     }
 
-
     private fun initRecyclerView() {
         val recyclerView = binding.rvRecyclerFragment3// encontramos el Recycler del Main LAYOUT xml
         recyclerView.layoutManager =
@@ -109,9 +94,7 @@ class CharListFragment : Fragment() {
         recyclerView.adapter = this.adapter
     }
 
-
     private fun updateUiState(state: CharListViewState) {
         binding.tvLoading.isVisible = state.loading
-
     }
 }

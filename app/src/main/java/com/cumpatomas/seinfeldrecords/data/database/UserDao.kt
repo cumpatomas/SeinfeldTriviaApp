@@ -9,7 +9,7 @@ import com.cumpatomas.seinfeldrecords.data.database.entities.UserEntity
 interface UserDao {
 
     @Insert
-    suspend fun InsertUserEntity(user: UserEntity)
+    suspend fun insertUserEntity(user: UserEntity)
 
     @Query("SELECT * FROM user_entity")
     suspend fun checkIfUserExists(): List<UserEntity>

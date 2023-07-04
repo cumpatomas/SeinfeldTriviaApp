@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "926230993407",
+    "project_id": "seinfeldapp-29d5f",
+    "storage_bucket": "seinfeldapp-29d5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926230993407:android:865b603529a291aa8f2fca",
+        "android_client_info": {
+          "package_name": "com.cumpatomas.seinfeldrecords"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926230993407-55locg8vn08t38b6u37ngskao7qqpcmb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cumpatomas.seinfeldrecords",
+            "certificate_hash": "22cf202d7396a2f7f2e4e51e9936a952ea093ed6"
+          }
+        },
+        {
+          "client_id": "926230993407-mbuhblq4mdk5g93nt0alb4vfu0960i2k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMTccO7oE_4L1RFqmDrk_q3qlOS_PZIA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926230993407-mbuhblq4mdk5g93nt0alb4vfu0960i2k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -90,9 +90,11 @@ class QuotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<ComposeView>(R.id.composeView).setContent {
+            /** Marquee configuration*/
             val txtMarquee: TextView = view.findViewById(R.id.tvChapterTitle)
             txtMarquee.isSelected = true
             txtMarquee.isSingleLine = true
+
             val lottieCorrect = view.findViewById<View>(R.id.lottieWellDone)
             val lottieWrong = view.findViewById<View>(R.id.lottieNope)
             val viewModel: QuotesFragmentViewModel by viewModels()

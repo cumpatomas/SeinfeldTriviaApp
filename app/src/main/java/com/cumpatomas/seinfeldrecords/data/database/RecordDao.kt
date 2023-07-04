@@ -16,4 +16,4 @@ interface RecordDao {
     suspend fun getRecord(id: Int): CharRecord
     @Query("DELETE FROM record_entity")
     fun deleteRecordList()
-}
+} 
