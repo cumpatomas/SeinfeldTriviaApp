@@ -1,4 +1,4 @@
-# SeinfeldTriviaApp
+# Seinfeld Trivia App
 Working on a Seinfeld fan trivia app to put in practice Flows, Retrofit, JSON, Room.
 I also scrap the scripts from a website and take some random lines.
 
@@ -17,7 +17,7 @@ https://github.com/cumpatomas/SeinfeldTriviaApp/assets/102058754/408faa00-1259-4
 
 ### Lines Screen:
 From the random script uscase I get 3 random lines from the 4 main charachters in an episode so the user have to drag and drop the line to it's author.
-Here I applied Jetpack Compose for the drag and drop and a marque Text View for the episode hint.
+Here I applied Jetpack Compose for the drag and drop and a marquee Text View for the episode hint.
 
 
 https://github.com/cumpatomas/SeinfeldTriviaApp/assets/102058754/e8aa855f-2932-4a56-b963-8aa1989f470f
