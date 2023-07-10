@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.cumpatomas.seinfeldrecords.data.database.entities.RecordEntity
 
 @Database(entities = [ RecordEntity::class ], version=1, exportSchema = false)
-@TypeConverters(RecordConverters::class)
+@TypeConverters(Converters::class)
     abstract class RecordDatabase : RoomDatabase() {
 
         abstract fun recordDao(): RecordDao

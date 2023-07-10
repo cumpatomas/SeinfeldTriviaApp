@@ -5,15 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import com.cumpatomas.seinfeldrecords.R
+import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 
 class CharListFragmentAdapter(): RecyclerView.Adapter<CharListFragmentViewHolder>() {
 
     private var  charList = mutableListOf<SeinfeldChar>()
-    lateinit var charRecords: List<CharRecord>
+    lateinit var charGestures: List<CharGestures>
 
 
     var onItemClickListener: (SeinfeldChar) -> Unit = {}
+
 
     fun setList(list: List<SeinfeldChar>) {
         charList = list.toMutableList()
@@ -29,8 +31,7 @@ class CharListFragmentAdapter(): RecyclerView.Adapter<CharListFragmentViewHolder
 
     override fun onBindViewHolder(holder: CharListFragmentViewHolder, position: Int) {
         val item = charList[position]
-        val records = charRecords.filter { it.mainChar == item.name }.size.toString()
-        holder.display(item, onItemClickListener, records)
+        holder.display(item, onItemClickListener, item.completed)
     }
 
 

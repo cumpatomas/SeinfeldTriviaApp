@@ -1,5 +1,7 @@
 package com.cumpatomas.seinfeldrecords.di
 
+import com.cumpatomas.seinfeldrecords.data.network.CharGesturesApi
+import com.cumpatomas.seinfeldrecords.data.network.CharListApi
 import com.cumpatomas.seinfeldrecords.data.network.QuestionsAPI
 import dagger.Module
 import dagger.Provides
@@ -19,9 +21,29 @@ object NetworkModule {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
-            .baseUrl("https://recetas-de-bruno.web.app/")
+            .baseUrl("https://seinfeldapp-29d5f.web.app/")
             .build()
             .create(QuestionsAPI::class.java)
+    }
+
+    @Provides
+    fun provideCharRetrofit(okHttpClient: OkHttpClient): CharListApi {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .baseUrl("https://seinfeldapp-29d5f.web.app/")
+            .build()
+            .create(CharListApi::class.java)
+    }
+
+    @Provides
+    fun provideGesturesRetrofit(okHttpClient: OkHttpClient): CharGesturesApi {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .baseUrl("https://seinfeldapp-29d5f.web.app/")
+            .build()
+            .create(CharGesturesApi::class.java)
     }
 
     @Provides

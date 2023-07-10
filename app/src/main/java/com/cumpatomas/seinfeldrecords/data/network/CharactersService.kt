@@ -1,16 +1,16 @@
 package com.cumpatomas.seinfeldrecords.data.network
 
-import com.cumpatomas.seinfeldrecords.data.model.QuestionModel
+import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import javax.inject.Inject
 
-class QuestionService @Inject constructor(private val retrofit: QuestionsAPI ) {
-
-    suspend fun getQuestions(): ResponseEvent<List<QuestionModel>> {
+class CharactersService @Inject constructor(private val retrofit: CharListApi) {
+    suspend fun getCharacters(): ResponseEvent<List<SeinfeldChar>> {
         return try {
-            val response = retrofit.getQuestions("questions/seinfeld_questions")
+
+            val response = retrofit.getCharList("characters/characters")
             if (response.isSuccessful) {
-                response.body()?.let { questionsList ->
-                    ResponseEvent.Success(questionsList)
+                response.body()?.let { charList ->
+                    ResponseEvent.Success(charList)
                 } ?: run {
                     ResponseEvent.Error(Exception("Response body is null."))
                 }
@@ -21,5 +21,4 @@ class QuestionService @Inject constructor(private val retrofit: QuestionsAPI ) {
             ResponseEvent.Error(e)
         }
     }
-
 }

@@ -17,16 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieDrawable
 import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.adapter.CharListFragmentAdapter
+import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import com.cumpatomas.seinfeldrecords.databinding.CharListFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CharListFragment : Fragment() {
     private val viewmodel: CharListFragmentViewModel by viewModels()
     private val adapter = CharListFragmentAdapter()
     private var _binding: CharListFragmentBinding? = null
     private val binding get() = _binding!!
+    private var gesturesList = emptyList<CharGestures>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,9 +57,12 @@ class CharListFragment : Fragment() {
 
     private fun initListeners() {
         adapter.onItemClickListener = {
-            val action: NavDirections =
-                CharListFragmentDirections.actionCharListFragmentToCharGesturesFragment("Kramer")
-            findNavController().navigate(action)
+            if (!it.completed) {
+                val action: NavDirections =
+                    CharListFragmentDirections.actionCharListFragmentToCharGesturesFragment(it.shortName)
+                findNavController().navigate(action)
+            } else {
+            }
         }
     }
 
@@ -63,8 +70,10 @@ class CharListFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewmodel.charList.collectLatest { list ->
-                        updateList(list)
+                    viewmodel.getGestures()
+                    viewmodel.gesturesList.collectLatest { gestures ->
+                        gesturesList = gestures
+                        adapter.charGestures = gestures
                     }
                 }
 
@@ -75,8 +84,13 @@ class CharListFragment : Fragment() {
                 }
 
                 launch {
-                    viewmodel.charRecords.collectLatest { records ->
-                        adapter.charRecords = records
+                    viewmodel.charList.collectLatest { list ->
+                        val new = list.toMutableList()
+                        for (i in new) {
+                            for (g in gesturesList.filter { it.char == i.shortName })
+                                i.completed = g.completed
+                        }
+                        updateList(new)
                     }
                 }
             }
@@ -84,11 +98,17 @@ class CharListFragment : Fragment() {
     }
 
     private fun updateList(list: List<SeinfeldChar>) {
-        adapter.setList(list)
+        val newList = list.toMutableList()
+        for (i in newList) {
+            for(g in gesturesList.filter { it.char == i.shortName })
+                i.completed = g.completed
+        }
+        adapter.setList(newList)
     }
 
     private fun initRecyclerView() {
-        val recyclerView = binding.rvRecyclerFragment3// encontramos el Recycler del Main LAYOUT xml
+        val recyclerView =
+            binding.rvRecyclerFragment3// encontramos el Recycler del Main LAYOUT xml
         recyclerView.layoutManager =
             LinearLayoutManager(context) // si cambiamos el Manager aqui podriamos hacer listados de GRID u otro tipo! Investigar!
         recyclerView.adapter = this.adapter

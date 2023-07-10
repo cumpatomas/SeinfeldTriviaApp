@@ -85,7 +85,7 @@ class QuizFragment : Fragment() {
     }
 
     private fun checkAnswer(answer: String) {
-        if (answer.lowercase() == correctAnswer.lowercase()) {
+        if (answer.lowercase().trimEnd() == correctAnswer.lowercase()) {
             viewModel.randomResponseText = RandomResponseText().getAnswer(true)
             setCorrectAnswerScreen()
             viewModel.setPoints(1)

@@ -2,6 +2,7 @@ package com.cumpatomas.seinfeldrecords.di
 
 import androidx.room.Room
 import com.cumpatomas.seinfeldrecords.data.database.ApplicationModule
+import com.cumpatomas.seinfeldrecords.data.database.GestureDao
 import com.cumpatomas.seinfeldrecords.data.database.LocalDataBase
 import com.cumpatomas.seinfeldrecords.data.database.UserDao
 import dagger.Module
@@ -27,6 +28,11 @@ object LocalDatabaseModule {
     @Provides
     fun provideUserDao(db: LocalDataBase): UserDao {
         return db.userDao()
+    }
+
+    @Provides
+    fun provideGestureDao(db: LocalDataBase): GestureDao {
+        return db.GestureDao()
     }
 
 }

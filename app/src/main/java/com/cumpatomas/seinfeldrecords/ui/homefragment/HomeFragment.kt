@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
         binding.cvAnswer1.setOnClickListener {
             viewModel.gifActive = true
             if (binding.tvAnswer1.text == correctTitle) {
-                viewModel.setPoints(1)
+                viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
                 viewModel.setPoints(-1)
@@ -110,7 +110,7 @@ class HomeFragment : Fragment() {
         binding.cvAnswer2.setOnClickListener {
             viewModel.gifActive = true
             if (binding.tvAnswer2.text == correctTitle) {
-                viewModel.setPoints(1)
+                viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
                 viewModel.setPoints(-1)
@@ -120,7 +120,7 @@ class HomeFragment : Fragment() {
         binding.cvAnswer3.setOnClickListener {
             viewModel.gifActive = true
             if (binding.tvAnswer3.text == correctTitle) {
-                viewModel.setPoints(1)
+                viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
                 viewModel.setPoints(-1)
@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
         binding.cvAnswer4.setOnClickListener {
             viewModel.gifActive = true
             if (binding.tvAnswer4.text == correctTitle) {
-                viewModel.setPoints(1)
+                viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
                 viewModel.setPoints(-1)

@@ -2,7 +2,6 @@ package com.cumpatomas.seinfeldrecords.ui.quizFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.cumpatomas.seinfeldrecords.data.model.QuestionModel
 import com.cumpatomas.seinfeldrecords.data.network.QuestionService
 import com.cumpatomas.seinfeldrecords.data.network.ResponseEvent
@@ -13,7 +12,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,9 +22,9 @@ class QuizFragmentViewModel @Inject constructor(
     private val getQuestions: QuestionService
 ) : ViewModel(
 ) {
-    private val _questionsList = MutableStateFlow (emptyList<QuestionModel>())
+    private val _questionsList = MutableStateFlow(emptyList<QuestionModel>())
     private val _correctAnswer = MutableStateFlow<String>("")
-    val correctAnswer  = _correctAnswer .asStateFlow()
+    val correctAnswer = _correctAnswer.asStateFlow()
     private val _randomQuestion = MutableStateFlow("")
     val randomQuestion = _randomQuestion.asStateFlow()
     private val _userPoints = MutableStateFlow<Int>(0)
@@ -41,7 +39,6 @@ class QuizFragmentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-
             _userPoints.value = getPoints.invoke()
 
             launch {
@@ -55,7 +52,6 @@ class QuizFragmentViewModel @Inject constructor(
                         val random = (0..questions.data.lastIndex).shuffled().random()
                         _randomQuestion.value = questions.data[random].question
                         _correctAnswer.value = questions.data[random].answer
-
                     }
                 }
             }.join()
@@ -75,10 +71,9 @@ class QuizFragmentViewModel @Inject constructor(
                 delay(2000)
             }
         }
-
     }
-    fun setPoints(points: Int) {
 
+    fun setPoints(points: Int) {
         viewModelScope.launch() {
             _userPoints.value += points
             if (_userPoints.value < 0) {
@@ -89,12 +84,11 @@ class QuizFragmentViewModel @Inject constructor(
                 getPoints.invoke()
             }.join()
 
-            if (points > 0) _questionsCorrect.value ++
+            if (points > 0) _questionsCorrect.value++
         }
     }
 
     fun countQuestion() {
-        _questionCounting.value ++
+        _questionCounting.value++
     }
-
 }

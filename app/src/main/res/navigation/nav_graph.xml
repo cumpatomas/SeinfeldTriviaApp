@@ -35,10 +35,6 @@
         android:label="Characters"
         tools:layout="@layout/char_list_fragment">
         <action
-            android:id="@+id/action_fragment3_to_charRecordListFragment"
-            app:destination="@id/charRecordListFragment"
-            app:popUpTo="@id/CharListFragment" />
-        <action
             android:id="@+id/action_CharListFragment_to_charGesturesFragment"
             app:destination="@id/charGesturesFragment"
             app:popUpTo="@id/CharListFragment" />
@@ -46,14 +42,6 @@
     <action
         android:id="@+id/action_global_Fragment2"
         app:destination="@id/HomeFragment" />
-    <fragment
-        android:id="@+id/charRecordListFragment"
-        android:name="com.cumpatomas.seinfeldrecords.ui.charrecordlist.CharRecordListFragment"
-        android:label="Character's Record ">
-        <argument
-            android:name="selectedCharRecord"
-            app:argType="string" />
-    </fragment>
     <fragment
         android:id="@+id/charRecordFragment"
         android:name="com.cumpatomas.seinfeldrecords.ui.charrecordfragment.CharRecordFragment"

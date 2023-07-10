@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class RecordConverters {
+class Converters {
     @TypeConverter
     fun fromString(value: String): List<String> {
         val listType: Type = object : TypeToken<ArrayList<String?>?>() {}.type

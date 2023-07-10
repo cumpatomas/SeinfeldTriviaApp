@@ -8,26 +8,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.cumpatomas.seinfeldrecords.R
+import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.databinding.CharGesturesFragmentBinding
+import com.robinhood.ticker.TickerUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+const val CORRECT_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/correct_answer_plop.mp3"
+const val WRONG_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/wrong_answer.mp3"
+const val TEN_POINTS_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/win_10_points.mp3"
+const val WIN_TEXT = "You win 10 points Mr. Eyebrow!    You win 10 points Mr Eyebrow!"
+
+@AndroidEntryPoint
 class CharGesturesFragment : Fragment() {
     private val viewModel: CharGesturesViewModel by viewModels()
     private val adapter = CharGesturesAdapter()
     private var _binding: CharGesturesFragmentBinding? = null
     private val binding get() = _binding!!
-    private var gesturesList = emptyList<CharGestures>()
-    lateinit var randomGesture: CharGestures
+    private var gesturesList = mutableListOf<CharGestures>()
+    private val navArgs: CharGesturesFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,75 +53,151 @@ class CharGesturesFragment : Fragment() {
         val txtMarquee: TextView = view.findViewById(R.id.tvExplanation)
         txtMarquee.isSelected = true
         txtMarquee.isSingleLine = true
-        initListeners()
+        viewModel.getCharSelected(navArgs.selectedChar)
         initRecyclerView()
         initCollectors()
+        initListeners()
     }
 
     private fun initCollectors() {
         lifecycleScope.launch {
-            viewModel.gesturesList.collectLatest { recievedList ->
-                updateList(recievedList)
-                gesturesList = recievedList
-                randomGesture = recievedList.shuffled().random()
+            launch() {
+                viewModel.userPoints.collectLatest {
+                    val ticker = binding.PointsTickerView
+                    ticker.setCharacterLists(TickerUtils.provideNumberList())
+                    ticker.text = it.toString()
+                }
             }
+            launch {
+                viewModel.gesturesList.collectLatest { recievedList ->
+                    updateList(recievedList.toMutableList())
+                    gesturesList = recievedList.toMutableList()
+                }
+            }.join()
         }
     }
 
     private fun initListeners() {
-
         setButtonRandomAudio()
-        lifecycleScope.launch {
 
-            viewModel.buttonIsPlaying.collectLatest { buttonIsPlaying ->
-                binding.btPlayThePhrase.isEnabled = !buttonIsPlaying
-                binding.lottieSound.isVisible = buttonIsPlaying
-                if (!buttonIsPlaying) {
-                    binding.btPlayThePhrase.isVisible = true
-                } else {
-                    binding.btPlayThePhrase.isVisible = false
+        lifecycleScope.launch {
+            launch {
+                viewModel.loading.collectLatest {
+                    binding.progressBar.isVisible = it
+                }
+            }
+            launch {
+                viewModel.buttonIsPlaying.collectLatest { buttonIsPlaying ->
+                    binding.btPlayThePhrase.isEnabled = !buttonIsPlaying
+                    binding.lottieSound.isVisible = buttonIsPlaying
+                    binding.btPlayThePhrase.isVisible = !buttonIsPlaying
+                }
+            }
+
+            launch {
+                viewModel.gesturesList.collectLatest { counting ->
+                    viewModel.questionsCorrect.collectLatest { correctAnswer ->
+                        if (correctAnswer > counting.size) {
+                            binding.tvQuestionsScore.text =
+                                "${counting.size} out of ${counting.size}"
+                        } else {
+                            binding.tvQuestionsScore.text =
+                                "$correctAnswer out of ${counting.size}"
+                        }
+                    }
                 }
             }
         }
-
     }
 
     private fun setButtonRandomAudio() {
         binding.btPlayThePhrase.setOnClickListener {
-            playAudio(randomGesture.audioLink)
+            val randomAudio = gesturesList.filter { it.id == viewModel.randomGestureId.value }
+
+            playAudio(randomAudio[0].audioLink)
         }
+
+        adapter.onItemClickListener = {
+            if (viewModel.randomGestureId.value == gesturesList[gesturesList.indexOf(it)].id) {
+                gesturesList[gesturesList.indexOf(it)].clicked = true
+
+                playAudio(CORRECT_AUDIO)
+                updateList(gesturesList)
+                viewModel.getRandomId()
+                viewModel.countQuestion()
+                checkIfWin()
+            } else {
+                gesturesList.forEach { it.clicked = false }
+
+                playAudio(WRONG_AUDIO)
+                updateList(gesturesList)
+                viewModel.getRandomId()
+                viewModel.setPoints(-1)
+                viewModel.resetQuestion()
+            }
+        }
+    }
+
+    private fun checkIfWin() {
+        for (gesture in gesturesList) {
+            if (gesture.clicked) continue
+            else return
+        }
+        winAnimation()
+    }
+
+    private fun winAnimation() {
+        val randomWrongGif = RandomGifProvider().randomCorrectGif
+        playAudio(TEN_POINTS_AUDIO)
+        viewModel.setPoints(10)
+        viewModel.setCharScreenComplete(navArgs.selectedChar)
+        binding.rvCharGesturesRecycler.isGone = true
+        binding.lottieSound.isGone = true
+        binding.animationConfettiGestures.isVisible = true
+        binding.tvWinTenPoints.isVisible = true
+        binding.lottieWin.isVisible = true
+        binding.tvExplanation.text = WIN_TEXT
+        binding.gifGestureContainer.isVisible = true
+        binding.gifGestureContainer.setImageResource(randomWrongGif.shuffled().random())
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun playAudio(url: String) {
         val mediaPlayer = MediaPlayer()
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
 //        mediaPlayer.setAudioStreamType((AudioManager.STREAM_MUSIC))
         mediaPlayer.setAudioAttributes(
             AudioAttributes
                 .Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
-        );
+        )
+
         try {
-            if (mediaPlayer.isPlaying) {
-                viewModel.buttonPlay(true)
-            }
+            viewModel.buttonPlay(true)
             mediaPlayer.setDataSource(url)
             mediaPlayer.prepare()
+            //mp3 will be started after completion of preparing...
+            mediaPlayer.setOnPreparedListener(MediaPlayer.OnPreparedListener { player ->
+                player.start()
+
+                if (url == CORRECT_AUDIO || url == WRONG_AUDIO) {
+                    viewModel.buttonPlay(false)
+                } else {
+                    viewModel.buttonPlay(true)
+                }
+                if (url == TEN_POINTS_AUDIO) {
+                    viewModel.buttonPlay(false)
+                    binding.btPlayThePhrase.isGone = true
+                }
+                mediaPlayer.setOnCompletionListener {
+                    viewModel.buttonPlay(false)
+                }
+            })
         } catch (e: IOException) {
             e.printStackTrace()
-        }
-
-        //mp3 will be started after completion of preparing...
-        mediaPlayer.setOnPreparedListener(MediaPlayer.OnPreparedListener { player ->
-            player.start()
-            viewModel.buttonPlay(true)
-        })
-
-        mediaPlayer.setOnCompletionListener {
-            it.pause()
-            it.stop()
-            viewModel.buttonPlay(false)
         }
     }
 
@@ -126,7 +212,7 @@ class CharGesturesFragment : Fragment() {
         recyclerView.adapter = this.adapter
     }
 
-    private fun updateList(list: List<CharGestures>) {
+    private fun updateList(list: MutableList<CharGestures>) {
         adapter.setList(list = list)
     }
 }

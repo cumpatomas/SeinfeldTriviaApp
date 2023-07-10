@@ -4,15 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cumpatomas.seinfeldrecords.R
-import com.cumpatomas.seinfeldrecords.data.CharListProvider.Companion.charList
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 
 class CharGesturesAdapter : RecyclerView.Adapter<CharGesturesViewHolder>() {
     private var charGesturesList = mutableListOf<CharGestures>()
     var onItemClickListener: (CharGestures) -> Unit = {}
 
-    fun setList(list: List<CharGestures>) {
-        charGesturesList = list.toMutableList()
+    fun setList(list: MutableList<CharGestures>) {
+        charGesturesList = list
         notifyDataSetChanged()
     }
 

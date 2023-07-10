@@ -5,4 +5,5 @@
     <string name="record_video_title">Watch it!</string>
     <string name="char_total_records">total records:</string>
     <string name="records">Records:</string>
+    <string name="play_char_audios">Click to play audios</string>
 </resources>
