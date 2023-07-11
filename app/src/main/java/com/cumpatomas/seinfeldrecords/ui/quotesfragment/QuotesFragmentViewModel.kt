@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.domain.GetQuotesUsecase
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
+import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,13 +73,19 @@ class QuotesFragmentViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-            _userPoints.value += points
-            if (_userPoints.value < 0) {
-                _userPoints.value = 0
+            if ((_userPoints.value + points) <= MAX_POINTS || points < 0) {
+                _userPoints.value += points
+                launch {
+                    updatePoints.invoke(_userPoints.value)
+                    getPoints.invoke()
+                }.join()
+
+                if (_userPoints.value < 0) {
+                    _userPoints.value = 0
+                }
+            } else {
+                _userPoints.value = MAX_POINTS
             }
-            launch {
-                updatePoints.invoke(_userPoints.value)
-            }.join()
         }
     }
 }

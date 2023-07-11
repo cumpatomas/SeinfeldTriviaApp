@@ -6,6 +6,7 @@ import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.domain.GetCharGestures
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.InsertGesturesInDataBase
+import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SetCharGestureAsCompleted
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,16 +67,19 @@ class CharGesturesViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-            _userPoints.value += points
-            if (_userPoints.value < 0) {
-                _userPoints.value = 0
-            }
-            launch {
-                updatePoints.invoke(_userPoints.value)
-                getPoints.invoke()
-            }.join()
+            if ((_userPoints.value + points) <= MAX_POINTS || points < 0) {
+                _userPoints.value += points
+                launch {
+                    updatePoints.invoke(_userPoints.value)
+                    getPoints.invoke()
+                }.join()
 
-            if (points > 0) _questionsCorrect.value++
+                if (_userPoints.value < 0) {
+                    _userPoints.value = 0
+                }
+            } else {
+                _userPoints.value = MAX_POINTS
+            }
         }
     }
 

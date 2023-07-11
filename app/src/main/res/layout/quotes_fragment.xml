@@ -103,7 +103,7 @@
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="#D84040"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:flow_horizontalAlign="center"
             app:flow_verticalAlign="center"

@@ -2,13 +2,11 @@ package com.cumpatomas.seinfeldrecords.ui.charlistfragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cumpatomas.seinfeldrecords.data.CharGesturesProvider
 import com.cumpatomas.seinfeldrecords.data.database.GestureDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
-import com.cumpatomas.seinfeldrecords.domain.GetCharGestures
 import com.cumpatomas.seinfeldrecords.domain.GetCharListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,9 +46,6 @@ class CharListFragmentViewModel @Inject constructor(
             _charList.value = charProvider.invoke()
 
             _viewState.send(CharListViewState(loading = false))
-
-
-
         }
     }
 
@@ -61,6 +56,4 @@ class CharListFragmentViewModel @Inject constructor(
             }.join()
         }
     }
-
-
 }

@@ -43,6 +43,7 @@ class CharListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.tvLoading.isGone = true
+        viewmodel.getGestures()
         initListeners()
         initCollectors()
         initRecyclerView()
