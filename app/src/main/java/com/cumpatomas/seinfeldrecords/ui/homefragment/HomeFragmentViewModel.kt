@@ -3,13 +3,12 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
-import com.cumpatomas.seinfeldrecords.data.network.QuestionService
-import com.cumpatomas.seinfeldrecords.data.network.ResponseEvent
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
+import com.cumpatomas.seinfeldrecords.domain.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
@@ -18,16 +17,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.stream.Collectors.counting
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeFragmentViewModel @Inject constructor(
-    private val scraping : ScrapScripts,
+    private val scraping: ScrapScripts,
     private val script: GetRandomScript,
     val getPoints: GetUserPoints,
     private val updatePoints: SaveUserPoints,
-    ) : ViewModel() {
+) : ViewModel() {
     private val _list = MutableStateFlow<List<String>>(emptyList())
     val list = _list.asStateFlow()
     private var urls = emptyList<String>()
@@ -50,7 +48,6 @@ class HomeFragmentViewModel @Inject constructor(
             getNewScript()
         }
     }
-
 
     suspend fun getNewScript() {
         var randomLines = listOf<String>()
@@ -92,11 +89,12 @@ class HomeFragmentViewModel @Inject constructor(
             timerOn = true
         }
     }
-var countingJob: Job? = null
+
+    var countingJob: Job? = null
     private fun counting() {
         var count = 15
         _timer.value = 15
-         countingJob = viewModelScope.launch {
+        countingJob = viewModelScope.launch {
             while (count != 0) {
                 delay(1000)
                 count--
@@ -112,24 +110,23 @@ var countingJob: Job? = null
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-            if ((_userPoints.value + points) <= MAX_POINTS || points < 0) {
+            if ((_userPoints.value + points) in ZERO..MAX_POINTS) {
                 _userPoints.value += points
                 launch {
                     updatePoints.invoke(_userPoints.value)
-                    getPoints.invoke()
                 }.join()
-
-                if (_userPoints.value < 0) {
-                    _userPoints.value = 0
-                }
+                getPoints.invoke()
             } else {
-                _userPoints.value = MAX_POINTS
+                if (_userPoints.value >= MAX_POINTS) {
+                    _userPoints.value = MAX_POINTS
+                } else {
+                    _userPoints.value = ZERO
+                }
             }
         }
     }
 
     fun getPoints() {
-
         viewModelScope.launch() {
             _userPoints.value = getPoints.invoke()
         }

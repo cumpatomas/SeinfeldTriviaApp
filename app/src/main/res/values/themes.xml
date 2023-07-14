@@ -22,12 +22,46 @@
         <!--This line changes the color of text in Toolbar-->
         <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
         <item name="textAllCaps">false</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:fontFamily">@font/fenice_oblique</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:scaleType">fitStart</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+    </style>
 
 
+    <style name="RoundedCornersDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
+    </style>
+
+    <style name="DialogCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+        <item name="dialogCornerRadius">16dp</item>
+    </style>
+
+
+
+
+    <style name="AppTheme.BottomMenu" parent="AppTheme" >
+        <!--This line changes the color of text in Toolbar-->
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAlignment">textStart</item>
 
     </style>
+
+
+
 
     <!-- Splash Screen Theme. -->
     <style name="SplashScreenTheme" parent="Theme.SplashScreen">

@@ -9,8 +9,10 @@ import com.cumpatomas.seinfeldrecords.domain.InsertGesturesInDataBase
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SetCharGestureAsCompleted
+import com.cumpatomas.seinfeldrecords.domain.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -47,6 +49,7 @@ class CharGesturesViewModel @Inject constructor(
     fun getCharSelected(char: String) {
         viewModelScope.launch(IO) {
             _loading.value = true
+//            delay(2000)
             launch {
                 _gesturesList.value = provider.invoke(char)
             }.join()
@@ -67,18 +70,18 @@ class CharGesturesViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-            if ((_userPoints.value + points) <= MAX_POINTS || points < 0) {
+            if ((_userPoints.value + points) in ZERO..MAX_POINTS) {
                 _userPoints.value += points
                 launch {
                     updatePoints.invoke(_userPoints.value)
-                    getPoints.invoke()
                 }.join()
-
-                if (_userPoints.value < 0) {
-                    _userPoints.value = 0
-                }
+                getPoints.invoke()
             } else {
-                _userPoints.value = MAX_POINTS
+                if (_userPoints.value >= MAX_POINTS) {
+                    _userPoints.value = MAX_POINTS
+                } else {
+                    _userPoints.value = ZERO
+                }
             }
         }
     }

@@ -208,10 +208,10 @@ fun BoxScope.PersonListContainer(
                 colorResource(id = R.color.transparent),
                 shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
             )
-            .padding(vertical = 10.dp, horizontal = 4.dp)
+            .padding(vertical = 10.dp, horizontal = 0.dp)
             .align(Alignment.BottomCenter),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceEvenly
 //        columns = GridCells.Fixed(count = 2)
     ) {
         items(items = author) { person ->
@@ -232,7 +232,7 @@ fun PersonCard(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         DropTarget<QuoteItem>(
             modifier = Modifier
-                .padding(6.dp),
+                .padding(0.dp),
         ) { isInBound, authorItem ->
             val bgColor = if (isInBound) {
                 colorResource(id = R.color.primaryColor)
@@ -281,7 +281,7 @@ fun PersonCard(
                 Image(
                     painter = painterResource(id = person.profile),
                     contentDescription = null,
-                    modifier = Modifier.size(80.dp),
+                    modifier = Modifier.size(75.dp),
                     contentScale = ContentScale.FillHeight
                 )
             }

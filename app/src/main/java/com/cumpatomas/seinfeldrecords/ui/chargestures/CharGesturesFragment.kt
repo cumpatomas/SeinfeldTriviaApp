@@ -2,6 +2,7 @@ package com.cumpatomas.seinfeldrecords.ui.chargestures
 
 import android.annotation.SuppressLint
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -78,17 +79,21 @@ class CharGesturesFragment : Fragment() {
     }
 
     private fun initListeners() {
-        setButtonRandomAudio()
-
         lifecycleScope.launch {
             launch {
-                viewModel.loading.collectLatest {
-                    binding.progressBar.isVisible = it
+                viewModel.loading.collectLatest { loading ->
+                    binding.progressBar.isVisible = loading
+                    if (!loading) {
+                        setButtonRandomAudio()
+                        binding.btPlayThePhrase.alpha = 1f
+                    } else
+                        binding.btPlayThePhrase.alpha = 0.0f
                 }
             }
+
             launch {
                 viewModel.buttonIsPlaying.collectLatest { buttonIsPlaying ->
-                    binding.btPlayThePhrase.isEnabled = !buttonIsPlaying
+                    binding.btPlayThePhrase.isClickable = !buttonIsPlaying
                     binding.lottieSound.isVisible = buttonIsPlaying
                     binding.btPlayThePhrase.isVisible = !buttonIsPlaying
                 }
@@ -171,6 +176,8 @@ class CharGesturesFragment : Fragment() {
         mediaPlayer.setAudioAttributes(
             AudioAttributes
                 .Builder()
+                .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
         )
@@ -194,6 +201,7 @@ class CharGesturesFragment : Fragment() {
                 }
                 mediaPlayer.setOnCompletionListener {
                     viewModel.buttonPlay(false)
+                    binding.btPlayThePhrase.isVisible = true
                 }
             })
         } catch (e: IOException) {

@@ -43,14 +43,6 @@
         android:id="@+id/action_global_Fragment2"
         app:destination="@id/HomeFragment" />
     <fragment
-        android:id="@+id/charRecordFragment"
-        android:name="com.cumpatomas.seinfeldrecords.ui.charrecordfragment.CharRecordFragment"
-        android:label="Chosen Record " >
-        <argument
-            android:name="recordid"
-            app:argType="integer" />
-    </fragment>
-    <fragment
         android:id="@+id/QuizFragment"
         android:name="com.cumpatomas.seinfeldrecords.ui.quizFragment.QuizFragment"
         android:label="Quiz time!" />

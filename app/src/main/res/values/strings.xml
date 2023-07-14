@@ -1,9 +1,4 @@
 <resources>
     <string name="app_name">Seinfeld Records</string>
-    <string name="record_title_label">Title</string>
-    <string name="record_details_label">Scene description:</string>
-    <string name="record_video_title">Watch it!</string>
-    <string name="char_total_records">total records:</string>
-    <string name="records">Records:</string>
     <string name="play_char_audios">Click to play audios</string>
 </resources>

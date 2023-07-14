@@ -4,32 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity"
-    android:background="@color/custom_blue">
+    android:background="@color/custom_blue"
+    tools:context=".ui.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@color/primaryColor"
+        app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:theme="@style/AppTheme.ToolbarFont"
-        android:paddingRight="3dp"
-        app:titleTextColor="@color/secondaryColor"/>
+        android:contentInsetLeft="0dp"
+        android:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetEnd="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        app:titleTextAppearance="@style/AppTheme.ToolbarFont"
+        style="@style/AppTheme.ToolbarFont"
+        app:titleTextColor="@color/secondaryColor"
 
-<!--    <ImageView
-        android:id="@+id/ivActionBar"
-        android:layout_width="38dp"
-        android:layout_height="22dp"
-        android:background="@drawable/raceflag_small"
+/>
+
+    <ImageView
+        android:id="@+id/ivShareButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="4dp"
+        android:background="@drawable/share_50"
         app:layout_constraintBottom_toBottomOf="@+id/toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/toolBar"
-        app:layout_constraintTop_toTopOf="@+id/toolBar" />-->
+        app:layout_constraintTop_toTopOf="@+id/toolBar" />
+
+    <ImageView
+        android:id="@+id/ivCoffeeButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="4dp"
+        android:background="@drawable/coffee_50_invert_2"
+        app:layout_constraintBottom_toBottomOf="@+id/toolBar"
+        app:layout_constraintEnd_toStartOf="@id/ivShareButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/toolBar"
+        app:layout_constraintTop_toTopOf="@+id/toolBar"
+        app:tint="@color/secondaryColor" />
+
+    <ImageView
+        android:id="@+id/ivStarButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="4dp"
+        android:background="@drawable/star_50_3"
+        app:layout_constraintBottom_toBottomOf="@+id/toolBar"
+        app:layout_constraintEnd_toStartOf="@id/ivCoffeeButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/toolBar"
+        app:layout_constraintTop_toTopOf="@+id/toolBar"
+        app:tint="@color/secondaryColor" />
 
 
     <androidx.fragment.app.FragmentContainerView
@@ -49,13 +90,19 @@
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/custom_blue"
+        app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
+        app:itemTextColor="@drawable/bottom_nav_icon_color_selector"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/top_app_bar"
+        android:theme="@style/AppTheme.BottomMenu"
+        app:titleTextAppearance="@style/AppTheme.BottomMenu"/>
 
-        />
+
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

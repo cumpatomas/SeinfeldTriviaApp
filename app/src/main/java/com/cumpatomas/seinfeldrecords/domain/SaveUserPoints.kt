@@ -4,6 +4,7 @@ import com.cumpatomas.seinfeldrecords.data.database.UserDao
 import javax.inject.Inject
 
 const val MAX_POINTS = 1000
+const val ZERO = 0
 
 class SaveUserPoints @Inject constructor(
     private val userDao: UserDao

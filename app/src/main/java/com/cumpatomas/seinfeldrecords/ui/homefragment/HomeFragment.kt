@@ -66,9 +66,8 @@ class HomeFragment : Fragment() {
                 ticker.text = it.toString()
                 if (it <= 5) binding.counterTickerView.textColor = resources.getColor(R.color.red)
                 if (it == 0) {
-                    println("out of time baby!")
                      if (!viewModel.timeOut ) {
-                         viewModel.setPoints(-2)
+                         viewModel.setPoints(-3)
                      }
                     viewModel.timeOut = true
                     binding.answersContainer.visibility = INVISIBLE
@@ -103,7 +102,7 @@ class HomeFragment : Fragment() {
                 viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
-                viewModel.setPoints(-1)
+                viewModel.setPoints(-2)
                 setWrongAnswerScreen()
             }
         }
@@ -113,7 +112,7 @@ class HomeFragment : Fragment() {
                 viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
-                viewModel.setPoints(-1)
+                viewModel.setPoints(-2)
                 setWrongAnswerScreen()
             }
         }
@@ -123,7 +122,7 @@ class HomeFragment : Fragment() {
                 viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
-                viewModel.setPoints(-1)
+                viewModel.setPoints(-2)
                 setWrongAnswerScreen()
             }
         }
@@ -133,7 +132,7 @@ class HomeFragment : Fragment() {
                 viewModel.setPoints(2)
                 setCorrectAnswerScreen()
             } else {
-                viewModel.setPoints(-1)
+                viewModel.setPoints(-2)
                 setWrongAnswerScreen()
             }
         }

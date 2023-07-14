@@ -7,6 +7,7 @@ import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
+import com.cumpatomas.seinfeldrecords.domain.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
@@ -73,18 +74,18 @@ class QuotesFragmentViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-            if ((_userPoints.value + points) <= MAX_POINTS || points < 0) {
+            if ((_userPoints.value + points) in ZERO..MAX_POINTS) {
                 _userPoints.value += points
                 launch {
                     updatePoints.invoke(_userPoints.value)
-                    getPoints.invoke()
                 }.join()
-
-                if (_userPoints.value < 0) {
-                    _userPoints.value = 0
-                }
+                getPoints.invoke()
             } else {
-                _userPoints.value = MAX_POINTS
+                if (_userPoints.value >= MAX_POINTS) {
+                    _userPoints.value = MAX_POINTS
+                } else {
+                    _userPoints.value = ZERO
+                }
             }
         }
     }

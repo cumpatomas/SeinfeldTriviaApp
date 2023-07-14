@@ -6,7 +6,7 @@
     <item
         android:id="@+id/CharListFragment"
         android:icon="@drawable/ic_character"
-        android:title="Characters"
+        android:title="Chars"
         android:contentDescription="description..."
         app:showAsAction="ifRoom" />
 
