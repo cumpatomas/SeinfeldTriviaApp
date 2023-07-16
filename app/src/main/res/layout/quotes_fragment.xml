@@ -76,7 +76,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/char_name_bckgrd"
+        android:background="@drawable/circle_yellow"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">

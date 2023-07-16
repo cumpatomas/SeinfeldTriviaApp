@@ -1,9 +1,10 @@
-package com.cumpatomas.seinfeldrecords.adapter
+package com.cumpatomas.seinfeldrecords.ui.charlistfragment
 
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -21,6 +22,8 @@ class CharListFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val charRelation = view.findViewById<TextView>(R.id.tvCharRelation)
     val charPhoto = view.findViewById<ImageView>(R.id.ivCharacter)
     val completedPhoto = view.findViewById<ImageView>(R.id.ivComplete)
+    val playButton = view.findViewById<ImageView>(R.id.ivPlay)
+    val episodesNumber = view.findViewById<TextView>(R.id.tvEpisodesNumber)
 
     fun display(
         char: SeinfeldChar,
@@ -30,6 +33,18 @@ class CharListFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         charName.text = char.name
         charSpecs.text = char.specs
         charRelation.text = char.relationWithJerry
+
+        episodesNumber.text = when (char.shortName) {
+            "Jerry" -> "180"
+            "Elaine" -> "177"
+            "George" -> "179"
+            "Kramer" -> "178"
+            "Newman" -> "48"
+            "Estelle" -> "29"
+            "Frank" -> "29"
+            "Puddy" -> "11"
+            else -> ""
+        }
 
         Glide.with(charPhoto.context) // el contexto lo sacamos de la variable charPhoto.context
             .load(char.photo)
@@ -43,6 +58,7 @@ class CharListFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         if (completed) {
             completedPhoto.isVisible = true
+            playButton.isGone = true
         }
 
         itemView.setOnClickListener {

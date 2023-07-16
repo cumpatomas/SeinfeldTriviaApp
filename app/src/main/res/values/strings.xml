@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Seinfeld Records</string>
     <string name="play_char_audios">Click to play audios</string>
+    <string name="episodes">Episodes: </string>
 </resources>

@@ -11,6 +11,7 @@
     <color name="primaryColor">#F1DE37</color>
     <color name="primaryLightColor">#ffff72</color>
     <color name="secondaryColor">#E40202</color>
+    <color name="secondaryColorDark">#C31F1F</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="custom_blue">#49A7C3</color>
     <color name="custom_blue_dark">#35839A</color>

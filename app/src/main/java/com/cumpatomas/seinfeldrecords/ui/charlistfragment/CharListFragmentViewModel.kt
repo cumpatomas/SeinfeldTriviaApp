@@ -8,10 +8,12 @@ import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import com.cumpatomas.seinfeldrecords.domain.GetCharListUseCase
+import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,21 +24,31 @@ import javax.inject.Inject
 class CharListFragmentViewModel @Inject constructor(
     private val charProvider: GetCharListUseCase,
     private val gesturesProvider: GestureDao,
+    private val pointsProvider: GetUserPoints,
 ) :
     ViewModel() {
     private val _charList = MutableStateFlow<List<SeinfeldChar>>(emptyList())
     val charList = _charList.asStateFlow()
-    private val _charRecords = MutableStateFlow<List<CharRecord>>(emptyList())
-    val charRecords = _charRecords.asStateFlow()
     private val _gesturesList = MutableStateFlow<List<CharGestures>>(emptyList())
     val gesturesList = _gesturesList.asStateFlow()
+    private val _animationIn = MutableStateFlow(false)
+    val animationIn = _animationIn.asStateFlow()
+    private val _pointsCircle = MutableStateFlow(false)
+    val pointsCircle = _pointsCircle.asStateFlow()
+    private val _userPoints = MutableStateFlow<Int>(0)
+    val userPoints = _userPoints.asStateFlow()
 
     // Declaramos el Estado de la Vista para actualizar
     private val _viewState = Channel<CharListViewState>()
     val viewState = _viewState.receiveAsFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
+            launch {
+                _userPoints.value = pointsProvider.invoke()
+                delay(2000)
+            }
+
             launch {
                 _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
             }.join()
@@ -46,6 +58,22 @@ class CharListFragmentViewModel @Inject constructor(
             _charList.value = charProvider.invoke()
 
             _viewState.send(CharListViewState(loading = false))
+            delay(600)
+            _animationIn.value = true
+            delay(6000)
+            _animationIn.value = false
+            delay(1000)
+            _pointsCircle.value = true
+
+        }
+
+
+    }
+
+    suspend fun getUserPoints() {
+        viewModelScope.launch(IO) {
+            _userPoints.value = pointsProvider.invoke()
+            delay(2000)
         }
     }
 

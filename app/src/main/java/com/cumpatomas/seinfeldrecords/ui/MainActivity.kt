@@ -56,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         )
         starDialog = RoundedDialog(
             "Here's for those who like the app\n" +
-                    " and those who don't... can go back", "Rate App", "https://googleplay.com"
+                    " and those who don't... can go back",
+            "Rate App",
+            "https://play.google.com/store/apps/details?id=com.cumpatomas.seinfeldrecords"
         )
     }
 
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             val body = "Don't keep this app in a vault, share it!"
-            val sub = "http//play.google.com"
+            val sub = "https://play.google.com/store/apps/details?id=com.cumpatomas.seinfeldrecords"
             intent.putExtra(Intent.EXTRA_TEXT, body)
             intent.putExtra(Intent.EXTRA_TEXT, sub)
             startActivity(Intent.createChooser(intent, "Don't keep this app in a vault, share it!"))

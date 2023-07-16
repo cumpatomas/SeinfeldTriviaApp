@@ -49,7 +49,7 @@ class CharGesturesViewModel @Inject constructor(
     fun getCharSelected(char: String) {
         viewModelScope.launch(IO) {
             _loading.value = true
-//            delay(2000)
+            delay(2000)
             launch {
                 _gesturesList.value = provider.invoke(char)
             }.join()

@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-
+        android:layout_marginTop="4dp"
         android:textStyle="italic"
         app:layout_constraintStart_toEndOf="@+id/ivCharacter"
         app:layout_constraintTop_toBottomOf="@+id/tvCharRelation"
@@ -78,24 +78,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="4dp"
-        android:fontFamily="@font/fenice_bold"
-        android:text="@string/play_char_audios"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivCharacter" />
+        android:layout_marginTop="4dp"
+        android:text="@string/episodes"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/ivCharacter"
+        app:layout_constraintTop_toBottomOf="@+id/tvCharSpecs" />
 
     <TextView
-        android:id="@+id/tvNumberRecords"
+        android:id="@+id/tvEpisodesNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/tvItemTotalRecords"
+        app:layout_constraintTop_toTopOf="@+id/tvItemTotalRecords" />
+
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
-        android:fontFamily="@font/fenice_bold"
-        android:textColor="@color/black"
+        android:src="@drawable/button_play_seinfeld4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCharSpecs"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 

@@ -1,4 +1,4 @@
-package com.cumpatomas.seinfeldrecords.adapter
+package com.cumpatomas.seinfeldrecords.ui.charlistfragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
-import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 
 class CharListFragmentAdapter(): RecyclerView.Adapter<CharListFragmentViewHolder>() {
 
