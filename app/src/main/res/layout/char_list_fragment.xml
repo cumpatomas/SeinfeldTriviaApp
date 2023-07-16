@@ -58,8 +58,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pointsContainer"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="@drawable/circle_yellow"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
                 android:fontFamily="@font/type_font"
                 android:foregroundGravity="bottom"
                 android:gravity="center_horizontal"
-                android:paddingBottom="4dp"
+                android:layout_marginBottom="4dp"
                 android:text="points"
                 android:textAlignment="center"
                 android:textSize="13sp"

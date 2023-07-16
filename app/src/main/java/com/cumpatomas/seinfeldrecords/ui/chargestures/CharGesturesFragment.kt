@@ -64,7 +64,7 @@ class CharGesturesFragment : Fragment() {
         lifecycleScope.launch {
             launch() {
                 viewModel.userPoints.collectLatest {
-                    val ticker = binding.PointsTickerView
+                    val ticker = binding.pointsTickerViewCharList
                     ticker.setCharacterLists(TickerUtils.provideNumberList())
                     ticker.text = it.toString()
                 }

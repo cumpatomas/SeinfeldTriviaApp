@@ -178,23 +178,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pointsContainer"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/char_name_bckgrd"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:background="@drawable/circle_yellow"
             android:padding="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            >
 
             <TextView
-                android:id="@+id/tvPoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/type_font"
                 android:foregroundGravity="bottom"
                 android:gravity="center_horizontal"
-                android:paddingBottom="4dp"
+                android:layout_marginBottom="4dp"
                 android:text="points"
                 android:textAlignment="center"
                 android:textSize="13sp"
@@ -202,24 +200,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-
             <com.robinhood.ticker.TickerView
-                android:id="@+id/PointsTickerView"
+                android:id="@+id/pointsTickerViewCharList"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textColor="#D84040"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:ticker_animationDuration="1500"
                 app:flow_horizontalAlign="center"
                 app:flow_verticalAlign="center"
-                app:layout_constraintBottom_toTopOf="@id/tvPoints"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:ticker_animationDuration="1500"
-                tools:layout_editor_absoluteY="3dp" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView

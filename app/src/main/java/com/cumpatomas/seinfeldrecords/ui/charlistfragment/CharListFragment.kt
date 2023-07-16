@@ -96,6 +96,7 @@ class CharListFragment : Fragment() {
             val initialColor = colorResource(id = R.color.secondaryColorDark)
             val targetColor = Color(0xFFede0dc)
             val animateColor = remember { Animatable(initialColor) }
+
             AnimatedVisibility(
                 visible = animation.value,
                 enter = slideInVertically(
@@ -116,7 +117,7 @@ class CharListFragment : Fragment() {
                         .fillMaxSize()
                         .clickable { }
                         .alpha(0.5f)
-                        .background(Color.DarkGray),
+                        .background(Color.Black),
                     horizontalAlignment = CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -194,10 +195,10 @@ class CharListFragment : Fragment() {
                             in 15..20 -> "Yama hama, it's fright night!"
                             in 20..30 -> "Alright, high-five!"
                             in 30..40 -> "you're like a phoenix\n rising from Arizona!"
-                            else ->"points!"
+                            else ->"You're no longer\n pre-occupied with sex\n so your mind is\n able to focus!"
                         },
                         textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = colorResource(id = R.color.white),
                         fontFamily = FontFamily(Font(R.font.type_font))
@@ -242,7 +243,7 @@ class CharListFragment : Fragment() {
                         animation = tween(
                             durationMillis = 1000,
                             easing = LinearEasing,
-                            delayMillis = 1000
+                            delayMillis = 1300
                         ),
                         repeatMode = RepeatMode.Reverse,
                         iterations = 1
