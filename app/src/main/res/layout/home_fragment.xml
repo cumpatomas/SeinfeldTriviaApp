@@ -13,9 +13,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginVertical="8dp"
-        android:background="@drawable/white_paper_png"
+
+        android:background="@drawable/typing_machine3"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 
@@ -50,13 +49,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="Choose the correct episode"
+        android:text="@string/choose_the_correct_episode"
         android:fontFamily="@font/type_font"
         app:layout_constraintVertical_weight="0.5"
         android:paddingBottom="16dp"
         android:textAlignment="center"
-        android:textColor="#323030"
-        android:textSize="20sp"
+        android:textColor="#5A585A"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -75,31 +74,32 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:fillViewport="true"
         android:id="@+id/scrollScript"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="38dp"
-        android:verticalScrollbarPosition="right"
-android:fadeScrollbars="false"
-        android:scrollbars="vertical"
         android:layout_marginHorizontal="16dp"
-        app:layout_constraintVertical_weight="5"
+        android:layout_marginTop="8dp"
+        android:fadeScrollbars="false"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:verticalScrollbarPosition="right"
+        app:layout_constraintBottom_toTopOf="@id/answersContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/answersContainer"
-        app:layout_constraintTop_toBottomOf="@+id/tvEpisodeTitle">
-    <TextView
-        android:id="@+id/tvScript"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/type_font"
-        android:textColor="#323030"
-        android:textSize="15sp"
-        android:scrollbars = "vertical"
-        tools:text="Hellooo" />
+        app:layout_constraintTop_toBottomOf="@+id/tvEpisodeTitle"
+        app:layout_constraintVertical_weight="5">
+
+        <TextView
+            android:id="@+id/tvScript"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/type_font"
+            android:scrollbars="vertical"
+            android:textColor="#5A585A"
+            android:textSize="15sp"
+            tools:text="Hellooo" />
 
 
     </ScrollView>
@@ -302,12 +302,12 @@ android:fadeScrollbars="false"
         android:id="@+id/tvSolution"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="64dp"
         android:clickable="true"
         android:focusable="true"
+        android:fontFamily="@font/type_font"
         android:textColor="#323030"
         android:textSize="25sp"
-        android:fontFamily="@font/type_font"
         app:layout_constraintBottom_toTopOf="@+id/clBottomBarContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -346,7 +346,7 @@ android:fadeScrollbars="false"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:textColor="@color/custom_blue"
+            android:textColor="@color/white"
             android:textSize="27sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

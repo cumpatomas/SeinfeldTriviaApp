@@ -3,6 +3,7 @@ package com.cumpatomas.seinfeldrecords.ui.charlistfragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.data.database.GestureDao
+import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.CharRecord
@@ -25,6 +26,8 @@ class CharListFragmentViewModel @Inject constructor(
     private val charProvider: GetCharListUseCase,
     private val gesturesProvider: GestureDao,
     private val pointsProvider: GetUserPoints,
+    private val questionDao: QuestionDao
+
 ) :
     ViewModel() {
     private val _charList = MutableStateFlow<List<SeinfeldChar>>(emptyList())
@@ -47,6 +50,9 @@ class CharListFragmentViewModel @Inject constructor(
             launch {
                 _userPoints.value = pointsProvider.invoke()
                 delay(2000)
+            }
+            launch {
+                questionDao.getQuestionsList()
             }
 
             launch {

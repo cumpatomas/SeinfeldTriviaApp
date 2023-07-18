@@ -4,16 +4,16 @@
     <color name="purple_700">#009688</color>
     <color name="teal_200">#009688</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="red">#F18282</color>
     <color name="transparent">#00F18282</color>
 
-    <color name="primaryColor">#F1DE37</color>
-    <color name="primaryLightColor">#ffff72</color>
-    <color name="secondaryColor">#E40202</color>
-    <color name="secondaryColorDark">#C31F1F</color>
+    <color name="primaryColor">#F2D750</color>
+    <color name="primaryLightColor">#F3DA60</color>
+    <color name="secondaryColor">#BF2A37</color>
+    <color name="secondaryColorDark">#AE2935</color>
     <color name="secondaryTextColor">#ffffff</color>
-    <color name="custom_blue">#49A7C3</color>
+    <color name="custom_blue">#51B3C7</color>
     <color name="custom_blue_dark">#35839A</color>
 </resources>
 

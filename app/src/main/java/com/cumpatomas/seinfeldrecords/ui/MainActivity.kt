@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var coffeeDialog: RoundedDialog
+    lateinit var coffeeDialog: RoundedDialog
     private lateinit var starDialog: RoundedDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +56,8 @@ class MainActivity : AppCompatActivity() {
         )
         starDialog = RoundedDialog(
             "Here's for those who like the app\n" +
-                    " and those who don't... can go back",
-            "Rate App",
+                    "and those who don't... can go back",
+            "Rate",
             "https://play.google.com/store/apps/details?id=com.cumpatomas.seinfeldrecords"
         )
     }

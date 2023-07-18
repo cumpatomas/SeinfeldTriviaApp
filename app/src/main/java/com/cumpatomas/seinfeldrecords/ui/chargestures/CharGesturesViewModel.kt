@@ -79,8 +79,10 @@ class CharGesturesViewModel @Inject constructor(
             } else {
                 if (_userPoints.value >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
+                    updatePoints.invoke(_userPoints.value)
                 } else {
                     _userPoints.value = ZERO
+                    updatePoints.invoke(_userPoints.value)
                 }
             }
         }

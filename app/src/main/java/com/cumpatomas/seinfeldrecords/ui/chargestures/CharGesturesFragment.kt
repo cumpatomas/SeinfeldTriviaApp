@@ -20,8 +20,10 @@ import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.databinding.CharGesturesFragmentBinding
+import com.cumpatomas.seinfeldrecords.ui.RoundedDialog
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -164,6 +166,14 @@ class CharGesturesFragment : Fragment() {
         binding.tvExplanation.text = WIN_TEXT
         binding.gifGestureContainer.isVisible = true
         binding.gifGestureContainer.setImageResource(randomWrongGif.shuffled().random())
+        lifecycleScope.launch {
+            delay(2000)
+            RoundedDialog(
+                "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
+                "Buy",
+                "https://paypal.me/cumpatomas"
+            ).show(parentFragmentManager, "Coffee")
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

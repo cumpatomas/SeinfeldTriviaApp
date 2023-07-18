@@ -2,12 +2,14 @@ package com.cumpatomas.seinfeldrecords.ui.quizFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide.init
+import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
+import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.QuestionModel
-import com.cumpatomas.seinfeldrecords.data.network.QuestionService
-import com.cumpatomas.seinfeldrecords.data.network.ResponseEvent
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
+import com.cumpatomas.seinfeldrecords.domain.UpdateAnsweredQuestion
 import com.cumpatomas.seinfeldrecords.domain.ZERO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class QuizFragmentViewModel @Inject constructor(
     private val getPoints: GetUserPoints,
     private val updatePoints: SaveUserPoints,
-    private val getQuestions: QuestionService
+    private val questionDao: QuestionDao,
+    private val updateAnsweredQuestion: UpdateAnsweredQuestion
 ) : ViewModel(
 ) {
     private val _questionsList = MutableStateFlow(emptyList<QuestionModel>())
@@ -34,36 +37,35 @@ class QuizFragmentViewModel @Inject constructor(
     var questionAnswered = false
     var answerIsCorrect = false
     var randomResponseText = ""
-    private val _questionCounting = MutableStateFlow(0)
-    val questionCounting = _questionCounting.asStateFlow()
     private val _questionsCorrect = MutableStateFlow(0)
     val questionsCorrect = _questionsCorrect.asStateFlow()
+    private val _totalQuestions = MutableStateFlow(0)
+    val totalQuestions = _totalQuestions.asStateFlow()
+    private var localQuestionList = emptyList<QuestionModel>()
 
     init {
         viewModelScope.launch {
             _userPoints.value = getPoints.invoke()
-
+            localQuestionList = questionDao.getQuestionsList().map { it.toModel() }
             launch {
-                when (val questions = getQuestions.getQuestions()) {
-                    is ResponseEvent.Error -> {
-                        questions.exception
-                    }
+                _questionsList.value = localQuestionList.filter { !it.answered }
+                val random = (0..localQuestionList.lastIndex).shuffled().random()
+                _randomQuestion.value = localQuestionList[random].question
+                _correctAnswer.value = localQuestionList[random].answer
 
-                    is ResponseEvent.Success -> {
-                        _questionsList.value = questions.data
-                        val random = (0..questions.data.lastIndex).shuffled().random()
-                        _randomQuestion.value = questions.data[random].question
-                        _correctAnswer.value = questions.data[random].answer
-                    }
-                }
             }.join()
+            _totalQuestions.value = localQuestionList.size
+            _questionsCorrect.value = questionDao.getQuestionsList().filter { it.answered }.size
         }
     }
 
     fun getNewQuestion() {
-        val random = (0.._questionsList.value.lastIndex).shuffled().random()
-        _randomQuestion.value = _questionsList.value[random].question
-        _correctAnswer.value = _questionsList.value[random].answer
+        viewModelScope.launch(IO) {
+            val updatedList = questionDao.getQuestionsList().map { it.toModel() }.filter { !it.answered }
+            val random = (0..updatedList.lastIndex).shuffled().random()
+            _randomQuestion.value = updatedList[random].question
+            _correctAnswer.value = updatedList[random].answer
+        }
     }
 
     fun getPoints() {
@@ -77,6 +79,13 @@ class QuizFragmentViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
+
+            if (points > 0) {
+                launch {
+                    updateAnsweredQuestion.invoke(_randomQuestion.value, true)
+                }.join()
+                _questionsCorrect.value = questionDao.getQuestionsList().filter { it.answered }.size
+            }
             if ((_userPoints.value + points) in ZERO..MAX_POINTS) {
                 _userPoints.value += points
                 launch {
@@ -86,14 +95,13 @@ class QuizFragmentViewModel @Inject constructor(
             } else {
                 if (_userPoints.value >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
+                    updatePoints.invoke(_userPoints.value)
                 } else {
                     _userPoints.value = ZERO
+                    updatePoints.invoke(_userPoints.value)
                 }
             }
         }
     }
-
-    fun countQuestion() {
-        _questionCounting.value++
-    }
 }
+

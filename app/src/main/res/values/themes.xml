@@ -38,12 +38,18 @@
 
     <style name="RoundedCornersDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+
     </style>
 
     <style name="DialogCorners">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
-        <item name="dialogCornerRadius">16dp</item>
+               <item name="dialogCornerRadius">16dp</item>
     </style>
 
 
@@ -52,7 +58,7 @@
     <style name="AppTheme.BottomMenu" parent="AppTheme" >
         <!--This line changes the color of text in Toolbar-->
         <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
-        <item name="textAllCaps">true</item>
+        <item name="textAllCaps">false</item>
         <item name="android:textSize">20sp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
         <item name="android:fontFamily">@font/type_font</item>

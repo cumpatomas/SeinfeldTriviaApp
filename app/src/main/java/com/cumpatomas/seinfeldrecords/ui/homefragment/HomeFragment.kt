@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.databinding.HomeFragmentBinding
+import com.cumpatomas.seinfeldrecords.ui.RoundedDialog
 import com.cumpatomas.seinfeldrecords.ui.homefragment.HomeFragmentViewModel
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,6 +80,7 @@ class HomeFragment : Fragment() {
 
         binding.btNext.setOnClickListener {
 
+
             viewModel.timeOut = false
             lifecycleScope.launch {
                 binding.scrollScript.scrollTo(0, 0)
@@ -141,7 +143,7 @@ class HomeFragment : Fragment() {
     private fun setNextVisibility() {
         binding.gifTimeOut.isGone = true
         viewModel.gifActive = false
-        binding.counterTickerView.textColor = resources.getColor(R.color.custom_blue)
+        binding.counterTickerView.textColor = resources.getColor(R.color.white)
         viewModel.resetCounter()
         binding.btNext.isEnabled = false
         binding.gifContainer.isGone = true
@@ -167,6 +169,14 @@ class HomeFragment : Fragment() {
         binding.btNext.isEnabled = true
         binding.pointsTickerView.text = viewModel.userPoints.value.toString()
         viewModel.resetCounter()
+        viewModel.countNextButtonPressed()
+        if (viewModel.nextButtonPressedTimes.value % 5 == 0) {
+            RoundedDialog(
+                "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
+                "Buy",
+                "https://paypal.me/cumpatomas"
+            ).show(parentFragmentManager, "Coffee")
+        }
     }
 
     private fun setCorrectAnswerScreen() {
@@ -186,6 +196,14 @@ class HomeFragment : Fragment() {
         binding.btNext.isEnabled = true
         binding.pointsTickerView.text = viewModel.userPoints.value.toString()
         viewModel.resetCounter()
+        viewModel.countNextButtonPressed()
+        if (viewModel.nextButtonPressedTimes.value % 5 == 0) {
+            RoundedDialog(
+                "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
+                "Buy",
+                "https://paypal.me/cumpatomas"
+            ).show(parentFragmentManager, "Coffee")
+        }
     }
 
 

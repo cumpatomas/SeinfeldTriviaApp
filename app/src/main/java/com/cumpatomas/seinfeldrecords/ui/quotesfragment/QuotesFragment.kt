@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
+import androidx.compose.ui.text.font.FontStyle.Companion.Normal
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
+import com.cumpatomas.seinfeldrecords.ui.RoundedDialog
 import com.robinhood.ticker.TickerUtils
 import com.robinhood.ticker.TickerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,6 +134,20 @@ class QuotesFragment : Fragment() {
                     }
                 }
             }
+            launch {
+                viewModel.reloadTimes.collectLatest { reloadTimes ->
+                    if(reloadTimes == 4) {
+                        val coffee = RoundedDialog(
+                            "How do you live with yourself??\nDon't be a bad tipper...buy me a coffee!",
+                            "Buy",
+                            "https://paypal.me/cumpatomas"
+                        )
+                        coffee.show(parentFragmentManager, "Coffee")
+                        viewModel.resetReloadTimes()
+                    }
+
+                }
+            }
         }
     }
 }
@@ -163,7 +179,7 @@ private fun QuotesLazyColumn(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.7f)
+                .fillMaxHeight(0.75f)
                 .padding(bottom = 8.dp),
 //            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -172,10 +188,10 @@ private fun QuotesLazyColumn(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Hold and drag the line to it's author",
+                    text = "Hold and drag the lines",
                     color = colorResource(id = R.color.primaryColor),
                     fontFamily = FontFamily(Font(R.font.type_font)),
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -202,13 +218,13 @@ fun BoxScope.PersonListContainer(
 ) {
     LazyRow(
         modifier = Modifier
-            .fillMaxHeight(0.3f)
+            .fillMaxHeight(0.25f)
             .fillMaxWidth()
             .background(
                 colorResource(id = R.color.transparent),
                 shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
             )
-            .padding(vertical = 10.dp, horizontal = 0.dp)
+            .padding(vertical = 0.dp, horizontal = 0.dp)
             .align(Alignment.BottomCenter),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -237,7 +253,7 @@ fun PersonCard(
             val bgColor = if (isInBound) {
                 colorResource(id = R.color.primaryColor)
             } else {
-                Color.White
+                colorResource(id = R.color.custom_blue)
             }
             authorItem?.let {
                 if (isInBound) {
@@ -246,7 +262,7 @@ fun PersonCard(
                         viewModel.setPoints(1)
                         coroutineScope.launch {
                             lottieCorrect.isVisible = true
-                            delay(3000)
+                            delay(2500)
                             lottieCorrect.isGone = true
                         }
                     } else {
@@ -254,8 +270,9 @@ fun PersonCard(
                         viewModel.setPoints(-1)
                         coroutineScope.launch {
                             lottieWrong.isVisible = true
-                            delay(3000)
+                            delay(2500)
                             lottieWrong.isGone = true
+
                         }
                     }
                     it.isAnswered.value = true
@@ -263,6 +280,7 @@ fun PersonCard(
                     if (quotesListSize.value == 3) {
                         quotesListSize.value = 0
                         viewModel.updateList()
+                        viewModel.reLoadCounting()
                     }
                     println(quotesListSize.value)
                 }
@@ -270,7 +288,7 @@ fun PersonCard(
 
             Column(
                 modifier = Modifier
-                    .shadow(elevation = 4.dp, shape = CircleShape)
+                    .shadow(elevation = 0.dp, shape = CircleShape)
                     .background(
                         bgColor,
                         CircleShape
@@ -281,8 +299,8 @@ fun PersonCard(
                 Image(
                     painter = painterResource(id = person.profile),
                     contentDescription = null,
-                    modifier = Modifier.size(75.dp),
-                    contentScale = ContentScale.FillHeight
+                    modifier = Modifier.size(88.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
         }
@@ -295,6 +313,7 @@ fun PersonCard(
         )
     }
 }
+
 
 @Composable
 fun QuoteItemCard(quoteItem: QuoteItem) {
@@ -315,10 +334,10 @@ fun QuoteItemCard(quoteItem: QuoteItem) {
                 ) {
                     Text(
                         text = quoteItem.quote,
-                        fontSize = 18.sp,
+                        fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.type_font)),
                         color = Color.DarkGray,
-                        fontStyle = Italic,
+                        fontStyle = Normal,
                         textAlign = TextAlign.Center,
                     )
                 }

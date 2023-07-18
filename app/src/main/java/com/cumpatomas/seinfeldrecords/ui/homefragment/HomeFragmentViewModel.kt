@@ -3,6 +3,7 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
+import com.cumpatomas.seinfeldrecords.data.network.QuestionService
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
@@ -41,11 +42,14 @@ class HomeFragmentViewModel @Inject constructor(
     var timeOut = false
     private val _userPoints = MutableStateFlow<Int>(0)
     val userPoints = _userPoints.asStateFlow()
+    private val _nextButtonPressedTimes = MutableStateFlow<Int>(0)
+    val nextButtonPressedTimes = _nextButtonPressedTimes.asStateFlow()
 
     init {
-        viewModelScope.launch() {
+        viewModelScope.launch(IO) {
             _userPoints.value = getPoints.invoke()
             getNewScript()
+
         }
     }
 
@@ -119,8 +123,10 @@ class HomeFragmentViewModel @Inject constructor(
             } else {
                 if (_userPoints.value >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
+                    updatePoints.invoke(_userPoints.value)
                 } else {
                     _userPoints.value = ZERO
+                    updatePoints.invoke(_userPoints.value)
                 }
             }
         }
@@ -130,5 +136,9 @@ class HomeFragmentViewModel @Inject constructor(
         viewModelScope.launch() {
             _userPoints.value = getPoints.invoke()
         }
+    }
+
+    fun countNextButtonPressed(){
+        _nextButtonPressedTimes.value ++
     }
 }

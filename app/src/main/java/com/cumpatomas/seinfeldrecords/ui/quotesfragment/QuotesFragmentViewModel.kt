@@ -31,10 +31,13 @@ class QuotesFragmentViewModel @Inject constructor(
     val userPoints = _userPoints.asStateFlow()
     private val _link = MutableStateFlow("")
     val link = _link.asStateFlow()
+    private val _reloadTimes= MutableStateFlow<Int>(0)
+    val reloadTimes = _reloadTimes.asStateFlow()
 
     init {
         _isLoading.value = true
         viewModelScope.launch(IO) {
+            getUserPoints()
             while (_quotesListViewModel.value.isEmpty()) {
                 launch {
                     _link.value = getScripts.invoke().shuffled().random()
@@ -83,10 +86,19 @@ class QuotesFragmentViewModel @Inject constructor(
             } else {
                 if (_userPoints.value >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
+                    updatePoints.invoke(_userPoints.value)
                 } else {
                     _userPoints.value = ZERO
+                    updatePoints.invoke(_userPoints.value)
                 }
             }
         }
+    }
+    fun reLoadCounting() {
+        _reloadTimes.value ++
+    }
+
+    fun resetReloadTimes() {
+        _reloadTimes.value = 0
     }
 }

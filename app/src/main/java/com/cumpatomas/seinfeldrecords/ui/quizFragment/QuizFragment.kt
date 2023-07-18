@@ -15,11 +15,11 @@ import com.cumpatomas.seinfeldrecords.core.ex.hideKeyboard
 import com.cumpatomas.seinfeldrecords.core.ex.typeWrite
 import com.cumpatomas.seinfeldrecords.data.RandomResponseText
 import com.cumpatomas.seinfeldrecords.databinding.QuizFragmentBinding
+import com.cumpatomas.seinfeldrecords.ui.RoundedDialog
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 @AndroidEntryPoint
 class QuizFragment : Fragment() {
@@ -35,7 +35,6 @@ class QuizFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = QuizFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -56,16 +55,14 @@ class QuizFragment : Fragment() {
     }
 
     private fun initListeners() {
-
-
-        binding.tiAnswer.hint = if(answerToList.lastIndex == 0) "${answerToList.lastIndex + 1} word..." else "${answerToList.lastIndex + 1} words..."
+        binding.tiAnswer.hint =
+            if (answerToList.lastIndex == 0) "${answerToList.lastIndex + 1} word..." else "${answerToList.lastIndex + 1} words..."
 
         binding.tiAnswer.addTextChangedListener { input ->
             submittedAnswer = input.toString()
         }
 
         binding.btSubmitButton.setOnClickListener {
-            viewModel.countQuestion()
             viewModel.questionAnswered = true
             checkAnswer(submittedAnswer)
             binding.tiAnswer.setText("")
@@ -81,7 +78,6 @@ class QuizFragment : Fragment() {
             binding.btNext.isGone = true
             binding.tvResponse.isGone = true
         }
-
     }
 
     private fun checkAnswer(answer: String) {
@@ -89,6 +85,13 @@ class QuizFragment : Fragment() {
             viewModel.randomResponseText = RandomResponseText().getAnswer(true)
             setCorrectAnswerScreen()
             viewModel.setPoints(1)
+            if (viewModel.questionsCorrect.value % 5 == 0) {
+                RoundedDialog(
+                    "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
+                    "Buy",
+                    "https://paypal.me/cumpatomas"
+                ).show(parentFragmentManager, "Coffee")
+            }
         } else {
             viewModel.randomResponseText = RandomResponseText().getAnswer(false)
             viewModel.setPoints(-1)
@@ -107,7 +110,6 @@ class QuizFragment : Fragment() {
         binding.tvResponse.typeWrite(viewLifecycleOwner, viewModel.randomResponseText, 20L)
         binding.tvResponse.isVisible = true
         binding.tvResponse.text = viewModel.randomResponseText
-
     }
 
     private fun setCorrectAnswerScreen() {
@@ -121,7 +123,6 @@ class QuizFragment : Fragment() {
         binding.tvResponse.typeWrite(viewLifecycleOwner, viewModel.randomResponseText, 20L)
         binding.tvResponse.isVisible = true
         binding.tvResponse.text = viewModel.randomResponseText
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -130,7 +131,6 @@ class QuizFragment : Fragment() {
             viewModel.getPoints()
 
             launch() {
-
                 viewModel.userPoints.collectLatest {
                     val ticker = binding.quizPointsTickerView
                     ticker.setCharacterLists(TickerUtils.provideNumberList())
@@ -140,30 +140,31 @@ class QuizFragment : Fragment() {
             launch {
                 viewModel.randomQuestion.collectLatest {
                     if (it.isNotEmpty()) {
-                        if (!viewModel.questionAnswered) binding.tvQuestion.typeWrite(viewLifecycleOwner, it, 10L)
-                        else binding.tvQuestion.text = it
+                        if (!viewModel.questionAnswered) {
+                            binding.tvQuestion.typeWrite(viewLifecycleOwner, it, 10L)
+                        } else {
+                            binding.tvQuestion.text = it
+                        }
                     }
                 }
-
-
             }
             launch {
                 viewModel.correctAnswer.collectLatest {
                     correctAnswer = it
                     answerToList = correctAnswer.split(" ")
-                    binding.tiAnswer.hint = if(answerToList.lastIndex == 0) "${answerToList.lastIndex + 1} word..." else "${answerToList.lastIndex + 1} words..."
+                    binding.tiAnswer.hint =
+                        if (answerToList.lastIndex == 0) "${answerToList.lastIndex + 1} word..." else "${answerToList.lastIndex + 1} words..."
                 }
             }
 
             launch {
-                viewModel.questionCounting.collectLatest {counting ->
-                    viewModel.questionsCorrect.collectLatest {correctAnswer ->
+                viewModel.questionsCorrect.collectLatest { correctAnswer ->
+                    viewModel.totalQuestions.collectLatest { total ->
                         binding.tvQuestionsScore.text =
-                            "$correctAnswer out of $counting"
+                            "$correctAnswer out of $total"
                     }
                 }
             }
-
         }
     }
 }
