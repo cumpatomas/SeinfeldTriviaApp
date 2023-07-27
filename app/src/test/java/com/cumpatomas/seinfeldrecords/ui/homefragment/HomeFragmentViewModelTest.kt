@@ -72,10 +72,11 @@ class HomeFragmentViewModelTest() {
         viewModel.timer.test(timeout = 15.seconds) {
             val actualTime = awaitItem()
             assertThat(actualTime == 15).isTrue()
-            val new = awaitItem()
-            assertThat(new != 15).isTrue()
+            Thread.sleep(1000) // apparently delay() function doesn't work because it delays the same dispatcher thread¿?
+            assertThat(awaitItem() == 14).isTrue()
             viewModel.resetCounter()
-            assertThat(actualTime == 15).isTrue()
+            assertThat(awaitItem() == 15).isTrue()
+            cancelAndConsumeRemainingEvents()
         }
     }
 }
