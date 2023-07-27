@@ -119,9 +119,22 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
+    // mockito
+    androidTestImplementation "org.mockito:mockito-core:2.25.0"
+    testImplementation "org.mockito:mockito-core:2.25.0"
+    implementation "org.mockito:mockito-core:2.25.0"
+    testImplementation "io.mockk:mockk:1.12.2"
+
+
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation "com.google.truth:truth:1.0.1"
+    androidTestImplementation "com.google.truth:truth:1.0.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation "app.cash.turbine:turbine:0.7.0"
 
     //Ticker
     implementation 'com.robinhood.ticker:ticker:2.0.4'

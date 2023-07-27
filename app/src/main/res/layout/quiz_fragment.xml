@@ -146,6 +146,7 @@
             android:foregroundGravity="bottom"
             android:gravity="center_horizontal"
             android:layout_marginBottom="4dp"
+            android:textColor="@color/secondaryColorDark"
             android:text="points"
             android:textAlignment="center"
             android:textSize="13sp"

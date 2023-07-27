@@ -13,6 +13,9 @@ interface QuestionDao {
     @Query("SELECT * FROM question_entity")
     suspend fun getQuestionsList(): List<QuestionEntity>
 
+    @Query("SELECT * FROM question_entity WHERE answered = 'false'")
+    suspend fun getQuestionsListFiltered(): List<QuestionEntity>
+
     @Query("UPDATE question_entity SET answered = :answered WHERE question = :question")
     suspend fun updateQuestion(question: String, answered: Boolean)
 }

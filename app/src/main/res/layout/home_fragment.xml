@@ -403,6 +403,7 @@
         android:fontFamily="@font/type_font"
         android:foregroundGravity="bottom"
         android:gravity="center_horizontal"
+        android:textColor="@color/secondaryColorDark"
         android:text="points"
         android:textAlignment="center"
         android:textSize="13sp"

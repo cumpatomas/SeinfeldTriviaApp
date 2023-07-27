@@ -84,8 +84,9 @@ class QuizFragment : Fragment() {
         if (answer.lowercase().trimEnd() == correctAnswer.lowercase()) {
             viewModel.randomResponseText = RandomResponseText().getAnswer(true)
             setCorrectAnswerScreen()
+            viewModel.updateAnswerToTrue()
             viewModel.setPoints(1)
-            if (viewModel.questionsCorrect.value % 5 == 0) {
+            if (viewModel.questionsCorrect.value % 5 == 0 && viewModel.questionsCorrect.value > 1) {
                 RoundedDialog(
                     "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
                     "Buy",

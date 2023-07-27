@@ -1,16 +1,77 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.FragmentsExperiment" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/custom_blue</item>
+        <item name="colorPrimaryVariant">@color/custom_blue</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+
+    <style name="AppTheme.ToolbarFont" parent="AppThemeDark">
+        <!--This line changes the color of text in Toolbar-->
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:scaleType">fitStart</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+    </style>
+
+
+    <style name="RoundedCornersDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="DialogCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+        <item name="dialogCornerRadius">16dp</item>
+    </style>
+
+
+    <style name="AppTheme.BottomMenu" parent="AppThemeDark">
+        <!--This line changes the color of text in Toolbar-->
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:fontFamily">@font/type_font</item>
+        <item name="android:textAlignment">textStart</item>
+
+    </style>
+
+
+    <!-- Splash Screen Theme. -->
+    <style name="SplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_nothing</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="postSplashScreenTheme">@style/Theme.FragmentsExperiment</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+
     </style>
 </resources>

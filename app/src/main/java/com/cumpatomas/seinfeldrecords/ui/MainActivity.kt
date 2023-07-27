@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.topAppBar, navController)
         alertsDialogSetUp()
+
     }
 
     private fun alertsDialogSetUp() {

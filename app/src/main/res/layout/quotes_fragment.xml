@@ -89,6 +89,7 @@
             android:foregroundGravity="bottom"
             android:gravity="center_horizontal"
             android:text="points"
+            android:textColor="@color/secondaryColorDark"
             android:textAlignment="center"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"

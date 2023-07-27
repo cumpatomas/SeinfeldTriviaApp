@@ -167,7 +167,7 @@ class CharGesturesFragment : Fragment() {
         binding.gifGestureContainer.isVisible = true
         binding.gifGestureContainer.setImageResource(randomWrongGif.shuffled().random())
         lifecycleScope.launch {
-            delay(2000)
+            delay(4000)
             RoundedDialog(
                 "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
                 "Buy",
@@ -178,26 +178,27 @@ class CharGesturesFragment : Fragment() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun playAudio(url: String) {
-        val mediaPlayer = MediaPlayer()
-        if (mediaPlayer.isPlaying) {
+        var mediaPlayer: MediaPlayer? = MediaPlayer()
+        if (mediaPlayer?.isPlaying == true) {
             mediaPlayer.stop()
+            mediaPlayer.release()
+            mediaPlayer = null
         }
 //        mediaPlayer.setAudioStreamType((AudioManager.STREAM_MUSIC))
-        mediaPlayer.setAudioAttributes(
+        mediaPlayer?.setAudioAttributes(
             AudioAttributes
                 .Builder()
-                .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
 
         try {
             viewModel.buttonPlay(true)
-            mediaPlayer.setDataSource(url)
-            mediaPlayer.prepare()
+            mediaPlayer?.setDataSource(url)
+            mediaPlayer?.prepare()
             //mp3 will be started after completion of preparing...
-            mediaPlayer.setOnPreparedListener(MediaPlayer.OnPreparedListener { player ->
+            mediaPlayer?.setOnPreparedListener(MediaPlayer.OnPreparedListener { player ->
                 player.start()
 
                 if (url == CORRECT_AUDIO || url == WRONG_AUDIO) {

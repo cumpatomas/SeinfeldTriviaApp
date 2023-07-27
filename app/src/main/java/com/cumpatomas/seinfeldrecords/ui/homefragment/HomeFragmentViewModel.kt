@@ -3,7 +3,6 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
-import com.cumpatomas.seinfeldrecords.data.network.QuestionService
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
@@ -49,7 +48,6 @@ class HomeFragmentViewModel @Inject constructor(
         viewModelScope.launch(IO) {
             _userPoints.value = getPoints.invoke()
             getNewScript()
-
         }
     }
 
@@ -138,7 +136,7 @@ class HomeFragmentViewModel @Inject constructor(
         }
     }
 
-    fun countNextButtonPressed(){
-        _nextButtonPressedTimes.value ++
+    fun countNextButtonPressed() {
+        _nextButtonPressedTimes.value++
     }
 }

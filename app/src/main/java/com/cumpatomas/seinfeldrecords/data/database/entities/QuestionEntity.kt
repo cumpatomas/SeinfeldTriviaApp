@@ -15,5 +15,5 @@ data class QuestionEntity(
 fun QuestionEntity.toModel() = QuestionModel(
     question = question,
     answer = answer,
-    answered = false
+    answered = answered
 )

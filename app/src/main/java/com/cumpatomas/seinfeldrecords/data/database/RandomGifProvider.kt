@@ -5,7 +5,6 @@ import com.cumpatomas.seinfeldrecords.R
 class RandomGifProvider() {
 
     val randomWrongGif = listOf(
-//        R.drawable.frank_sucks,
         R.drawable.frank_george,
         R.drawable.kramer_stink,
         R.drawable.george_wrong,

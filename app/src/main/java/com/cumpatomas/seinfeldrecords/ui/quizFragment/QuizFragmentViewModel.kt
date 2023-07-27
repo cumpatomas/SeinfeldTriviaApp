@@ -2,7 +2,6 @@ package com.cumpatomas.seinfeldrecords.ui.quizFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.QuestionModel
@@ -47,24 +46,25 @@ class QuizFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             _userPoints.value = getPoints.invoke()
             localQuestionList = questionDao.getQuestionsList().map { it.toModel() }
+            _questionsCorrect.value = questionDao.getQuestionsList().filter { it.answered }.size
+            val notAnsweredList = localQuestionList.filter { !it.answered }
             launch {
-                _questionsList.value = localQuestionList.filter { !it.answered }
-                val random = (0..localQuestionList.lastIndex).shuffled().random()
-                _randomQuestion.value = localQuestionList[random].question
-                _correctAnswer.value = localQuestionList[random].answer
-
+                _questionsList.value = notAnsweredList
+                val random = (0..notAnsweredList.lastIndex).shuffled().random()
+                _randomQuestion.value = notAnsweredList[random].question
+                _correctAnswer.value = notAnsweredList[random].answer
             }.join()
             _totalQuestions.value = localQuestionList.size
-            _questionsCorrect.value = questionDao.getQuestionsList().filter { it.answered }.size
         }
     }
 
     fun getNewQuestion() {
         viewModelScope.launch(IO) {
-            val updatedList = questionDao.getQuestionsList().map { it.toModel() }.filter { !it.answered }
-            val random = (0..updatedList.lastIndex).shuffled().random()
-            _randomQuestion.value = updatedList[random].question
-            _correctAnswer.value = updatedList[random].answer
+/*            val updatedList = questionDao.getQuestionsList().map { it.toModel() }
+            val notAnsweredList = updatedList.filter { !it.answered }*/
+            val random = (0..localQuestionList.lastIndex).shuffled().random()
+            _randomQuestion.value = localQuestionList[random].question
+            _correctAnswer.value = localQuestionList[random].answer
         }
     }
 
@@ -79,13 +79,6 @@ class QuizFragmentViewModel @Inject constructor(
 
     fun setPoints(points: Int) {
         viewModelScope.launch() {
-
-            if (points > 0) {
-                launch {
-                    updateAnsweredQuestion.invoke(_randomQuestion.value, true)
-                }.join()
-                _questionsCorrect.value = questionDao.getQuestionsList().filter { it.answered }.size
-            }
             if ((_userPoints.value + points) in ZERO..MAX_POINTS) {
                 _userPoints.value += points
                 launch {
@@ -101,6 +94,17 @@ class QuizFragmentViewModel @Inject constructor(
                     updatePoints.invoke(_userPoints.value)
                 }
             }
+        }
+    }
+
+    fun updateAnswerToTrue() {
+        viewModelScope.launch() {
+            launch {
+                updateAnsweredQuestion.invoke(_randomQuestion.value, true)
+            }.join()
+            localQuestionList =
+                questionDao.getQuestionsList().map { it.toModel() }.filter { !it.answered }
+            _questionsCorrect.value++
         }
     }
 }
