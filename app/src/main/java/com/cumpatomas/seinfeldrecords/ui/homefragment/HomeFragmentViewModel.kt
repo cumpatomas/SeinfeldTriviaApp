@@ -119,7 +119,7 @@ class HomeFragmentViewModel @Inject constructor(
                 }.join()
                 getPoints.invoke()
             } else {
-                if (_userPoints.value >= MAX_POINTS) {
+                if (_userPoints.value + points >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
                     updatePoints.invoke(_userPoints.value)
                 } else {

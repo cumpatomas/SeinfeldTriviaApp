@@ -6,13 +6,11 @@ import com.cumpatomas.seinfeldrecords.data.database.GestureDao
 import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
-import com.cumpatomas.seinfeldrecords.data.model.CharRecord
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
 import com.cumpatomas.seinfeldrecords.data.network.QuestionService
 import com.cumpatomas.seinfeldrecords.domain.GetCharListUseCase
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -28,8 +26,6 @@ class CharListFragmentViewModel @Inject constructor(
     private val gesturesProvider: GestureDao,
     private val pointsProvider: GetUserPoints,
     private val questionService: QuestionService,
-    private val questionDao: QuestionDao
-
 ) :
     ViewModel() {
     private val _charList = MutableStateFlow<List<SeinfeldChar>>(emptyList())
@@ -49,16 +45,12 @@ class CharListFragmentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(IO) {
-
             launch {
                 _userPoints.value = pointsProvider.invoke()
                 delay(2000)
             }
             launch {
                 questionService.getQuestions()
-            }.join()
-            launch {
-                questionDao.getQuestionsList()
             }
 
             launch {
@@ -76,24 +68,13 @@ class CharListFragmentViewModel @Inject constructor(
             _animationIn.value = false
             delay(1000)
             _pointsCircle.value = true
-
         }
-
-
     }
 
     suspend fun getUserPoints() {
         viewModelScope.launch(IO) {
             _userPoints.value = pointsProvider.invoke()
             delay(2000)
-        }
-    }
-
-    fun getGestures() {
-        viewModelScope.launch(IO) {
-            launch {
-                _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
-            }.join()
         }
     }
 }

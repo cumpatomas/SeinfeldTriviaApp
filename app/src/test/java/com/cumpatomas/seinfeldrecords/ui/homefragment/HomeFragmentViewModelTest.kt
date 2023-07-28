@@ -2,7 +2,6 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import app.cash.turbine.timeout
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
@@ -11,8 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -28,11 +25,12 @@ class HomeFragmentViewModelTest() {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
     private val dispatchers = StandardTestDispatcher()
+    private lateinit var viewModel: HomeFragmentViewModel
+
     private val scraping: ScrapScripts = mockk()
     private val randomScript: GetRandomScript = mockk()
-    lateinit var viewModel: HomeFragmentViewModel
     private val getPoints: GetUserPoints = mockk()
-    private val updatePoints: SaveUserPoints = mockk()
+    private val updatePoints: SaveUserPoints = mockk(relaxed = true) // mocks the savepoints function but as it is relaxed we don't have to mock the data base
     private val listTest = mutableListOf("uno", "dos", "tres")
 
     @Before
@@ -77,6 +75,23 @@ class HomeFragmentViewModelTest() {
             viewModel.resetCounter()
             assertThat(awaitItem() == 15).isTrue()
             cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `setPoints function test and minimum (zero) and max (1000) points accepted`() = runTest {
+        viewModel.userPoints.test {
+            var actualPoints = awaitItem()
+            assertThat(actualPoints == 10).isTrue()
+            viewModel.setPoints(2)
+            actualPoints = awaitItem()
+            assertThat(actualPoints == 12).isTrue()
+            viewModel.setPoints(1200)
+            actualPoints = awaitItem()
+            assertThat(actualPoints == 1000).isTrue()
+            viewModel.setPoints(-1200)
+            actualPoints = awaitItem()
+            assertThat(actualPoints == 0).isTrue()
         }
     }
 }
