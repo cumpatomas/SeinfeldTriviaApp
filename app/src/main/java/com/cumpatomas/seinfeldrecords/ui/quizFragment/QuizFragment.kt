@@ -86,7 +86,7 @@ class QuizFragment : Fragment() {
             setCorrectAnswerScreen()
             viewModel.updateAnswerToTrue()
             viewModel.setPoints(1)
-            if (viewModel.questionsCorrect.value % 5 == 0 && viewModel.questionsCorrect.value > 1) {
+            if (viewModel.questionsCorrect.value % 8 == 0 && viewModel.questionsCorrect.value > 1) {
                 RoundedDialog(
                     "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
                     "Buy",

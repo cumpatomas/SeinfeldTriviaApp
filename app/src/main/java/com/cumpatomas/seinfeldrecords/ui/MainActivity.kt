@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isGone
@@ -31,9 +33,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var coffeeDialog: RoundedDialog
     private lateinit var starDialog: RoundedDialog
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -46,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.topAppBar, navController)
         alertsDialogSetUp()
-
     }
 
     private fun alertsDialogSetUp() {
@@ -76,6 +79,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.ivCoffeeButton.setOnClickListener {
             coffeeDialog.show(supportFragmentManager, "Coffee")
+        }
+
+        binding.ivCoffeeButton.setOnLongClickListener {
+            viewModel.setNoAdsForUser()
+            Toast.makeText(this, "You are free of ads and you're loving it!!", Toast.LENGTH_LONG)
+                .show()
+            true
         }
 
         binding.ivStarButton.setOnClickListener {

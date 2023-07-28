@@ -17,9 +17,14 @@ interface UserDao {
     @Query("SELECT points FROM user_entity")
     suspend fun getPoints(): Int
 
-
     @Query("UPDATE user_entity SET points = :points ")
     suspend fun updatePoints(points: Int): Int
+
+    @Query("UPDATE user_entity SET noAds = :noAds ")
+    suspend fun updateAds(noAds: Boolean)
+
+    @Query("SELECT noAds FROM user_entity")
+    suspend fun getUserAdsState(): Boolean
 
 
 }

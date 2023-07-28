@@ -1,6 +1,9 @@
 package com.cumpatomas.seinfeldrecords
 
+import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
+import android.provider.Settings.Global.putInt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -31,6 +34,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     var correctTitle = ""
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,6 +46,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         initCollectors()
         initListeners()
         viewModel.getPoints
@@ -172,12 +177,13 @@ class HomeFragment : Fragment() {
         viewModel.countNextButtonPressed()
         if (viewModel.nextButtonPressedTimes.value % 5 == 0) {
             RoundedDialog(
-                "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
+                "How do you live with yourself??\nDon't be a bad tipper...buy me a coffee!",
                 "Buy",
                 "https://paypal.me/cumpatomas"
             ).show(parentFragmentManager, "Coffee")
         }
     }
+
 
     private fun setCorrectAnswerScreen() {
         viewModel.countingJob?.cancel()

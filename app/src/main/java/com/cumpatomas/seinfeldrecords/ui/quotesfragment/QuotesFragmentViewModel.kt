@@ -3,6 +3,7 @@ package com.cumpatomas.seinfeldrecords.ui.quotesfragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.domain.GetQuotesUsecase
+import com.cumpatomas.seinfeldrecords.domain.GetUserAdsState
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
@@ -21,7 +22,8 @@ class QuotesFragmentViewModel @Inject constructor(
     private val getQuotes: GetQuotesUsecase,
     private val getPoints: GetUserPoints,
     private val updatePoints: SaveUserPoints,
-    private val getScripts: ScrapScripts
+    private val getScripts: ScrapScripts,
+    private val getUserAdsState: GetUserAdsState,
 ) : ViewModel() {
     private val _quotesListViewModel = MutableStateFlow(emptyList<QuoteItem>())
     val quotesListViewModel = _quotesListViewModel.asStateFlow()
@@ -33,6 +35,9 @@ class QuotesFragmentViewModel @Inject constructor(
     val link = _link.asStateFlow()
     private val _reloadTimes= MutableStateFlow<Int>(0)
     val reloadTimes = _reloadTimes.asStateFlow()
+    private val _noAdsState = MutableStateFlow<Boolean>(false)
+    val noAdsState = _noAdsState.asStateFlow()
+
 
     init {
         _isLoading.value = true
@@ -47,6 +52,7 @@ class QuotesFragmentViewModel @Inject constructor(
                     _quotesListViewModel.value = getQuotes.invoke(_link.value)
                 }.join()
             }
+            _noAdsState.value = getUserAdsState.invoke()
             _isLoading.value = false
         }
     }
@@ -64,6 +70,7 @@ class QuotesFragmentViewModel @Inject constructor(
                     _quotesListViewModel.value = getQuotes.invoke(_link.value)
                 }.join()
             }
+            _noAdsState.value = getUserAdsState.invoke()
             _isLoading.value = false
         }
     }

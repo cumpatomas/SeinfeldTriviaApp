@@ -9,10 +9,12 @@ import com.cumpatomas.seinfeldrecords.data.model.UserModel
     data class UserEntity(
         @PrimaryKey(autoGenerate = true) val id: Int? = null,
         var name: String? = null,
-        var points: Int = 0
+        var points: Int = 0,
+        var noAds: Boolean = false
     )
 
     fun UserModel.toEntity() = UserEntity(
         name = name,
         points = points,
+        noAds = noAds
     )

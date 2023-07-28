@@ -47,7 +47,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.text.font.FontStyle.Companion.Normal
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -96,7 +95,6 @@ class QuotesFragment : Fragment() {
             val txtMarquee: TextView = view.findViewById(R.id.tvChapterTitle)
             txtMarquee.isSelected = true
             txtMarquee.isSingleLine = true
-
             val lottieCorrect = view.findViewById<View>(R.id.lottieWellDone)
             val lottieWrong = view.findViewById<View>(R.id.lottieNope)
             val viewModel: QuotesFragmentViewModel by viewModels()
@@ -105,6 +103,7 @@ class QuotesFragment : Fragment() {
             val quotesListSize = rememberSaveable {
                 mutableStateOf<Int?>(0)
             }
+
 
             initCollectors(viewModel)
 
@@ -123,6 +122,21 @@ class QuotesFragment : Fragment() {
 
     private fun initCollectors(viewModel: QuotesFragmentViewModel) {
         lifecycleScope.launch {
+            launch() {
+                viewModel.noAdsState.collectLatest { state ->
+                    viewModel.reloadTimes.collectLatest { reloadTimes ->
+                        if (reloadTimes == 5 && !state) {
+                            val coffee = RoundedDialog(
+                                "How do you live with yourself??\nDon't be a bad tipper...buy me a coffee!",
+                                "Buy",
+                                "https://paypal.me/cumpatomas"
+                            )
+                            coffee.show(parentFragmentManager, "Coffee")
+                            viewModel.resetReloadTimes()
+                        }
+                    }
+                }
+            }
             launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.getUserPoints()
@@ -134,215 +148,201 @@ class QuotesFragment : Fragment() {
                     }
                 }
             }
-            launch {
-                viewModel.reloadTimes.collectLatest { reloadTimes ->
-                    if(reloadTimes == 4) {
-                        val coffee = RoundedDialog(
-                            "How do you live with yourself??\nDon't be a bad tipper...buy me a coffee!",
-                            "Buy",
-                            "https://paypal.me/cumpatomas"
-                        )
-                        coffee.show(parentFragmentManager, "Coffee")
-                        viewModel.resetReloadTimes()
-                    }
-
-                }
-            }
         }
     }
-}
 
-@SuppressLint("StateFlowValueCalledInComposition", "SetTextI18n")
-@Composable
-private fun QuotesLazyColumn(
-    quotesList: List<QuoteItem>,
-    loading: State<Boolean>,
-    viewModel: QuotesFragmentViewModel,
-    txtMarquee: TextView
-) {
-    if (loading.value) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f)
-                .padding(top = 24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator(
-                color = colorResource(id = R.color.primaryColor),
-                modifier = Modifier.size(40.dp),
-                strokeWidth = 5.dp
-            )
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.75f)
-                .padding(bottom = 8.dp),
-//            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Hold and drag the lines",
-                    color = colorResource(id = R.color.primaryColor),
-                    fontFamily = FontFamily(Font(R.font.type_font)),
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            items(items = quotesList.take(3)) { quote ->
-                if (!quote.isAnswered.value) QuoteItemCard(quoteItem = quote)
-            }
-        }
-        txtMarquee.text = "Chapter: " + viewModel.link.value
-            .substringAfterLast('/')
-            .dropLast(4).addSpaces() + "     " +
-                "Chapter: " + viewModel.link.value.substringAfterLast('/').dropLast(4).addSpaces() +
-        "     " +
-                "Chapter: " + viewModel.link.value.substringAfterLast('/').dropLast(4).addSpaces()
-    }
-}
-
-@Composable
-fun BoxScope.PersonListContainer(
-    viewModel: QuotesFragmentViewModel,
-    quotesListSize: MutableState<Int?>,
-    lottieCorrect: View,
-    lottieWrong: View
-) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxHeight(0.25f)
-            .fillMaxWidth()
-            .background(
-                colorResource(id = R.color.transparent),
-                shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
-            )
-            .padding(vertical = 0.dp, horizontal = 0.dp)
-            .align(Alignment.BottomCenter),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-//        columns = GridCells.Fixed(count = 2)
+    @SuppressLint("StateFlowValueCalledInComposition", "SetTextI18n")
+    @Composable
+    private fun QuotesLazyColumn(
+        quotesList: List<QuoteItem>,
+        loading: State<Boolean>,
+        viewModel: QuotesFragmentViewModel,
+        txtMarquee: TextView
     ) {
-        items(items = author) { person ->
-            PersonCard(person, viewModel, quotesListSize, lottieCorrect, lottieWrong)
-        }
-    }
-}
-
-@Composable
-fun PersonCard(
-    person: Person,
-    viewModel: QuotesFragmentViewModel,
-    quotesListSize: MutableState<Int?>,
-    lottieCorrect: View,
-    lottieWrong: View
-) {
-    val coroutineScope = rememberCoroutineScope()
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        DropTarget<QuoteItem>(
-            modifier = Modifier
-                .padding(0.dp),
-        ) { isInBound, authorItem ->
-            val bgColor = if (isInBound) {
-                colorResource(id = R.color.primaryColor)
-            } else {
-                colorResource(id = R.color.custom_blue)
-            }
-            authorItem?.let {
-                if (isInBound) {
-                    if (it.author == person.name) {
-                        println("Right!!")
-                        viewModel.setPoints(1)
-                        coroutineScope.launch {
-                            lottieCorrect.isVisible = true
-                            delay(2500)
-                            lottieCorrect.isGone = true
-                        }
-                    } else {
-                        println("wrong!")
-                        viewModel.setPoints(-1)
-                        coroutineScope.launch {
-                            lottieWrong.isVisible = true
-                            delay(2500)
-                            lottieWrong.isGone = true
-
-                        }
-                    }
-                    it.isAnswered.value = true
-                    quotesListSize.value = quotesListSize.value?.plus(1)
-                    if (quotesListSize.value == 3) {
-                        quotesListSize.value = 0
-                        viewModel.updateList()
-                        viewModel.reLoadCounting()
-                    }
-                    println(quotesListSize.value)
-                }
-            }
-
+        if (loading.value) {
             Column(
                 modifier = Modifier
-                    .shadow(elevation = 0.dp, shape = CircleShape)
-                    .background(
-                        bgColor,
-                        CircleShape
-                    ),
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f)
+                    .padding(top = 24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = person.profile),
-                    contentDescription = null,
-                    modifier = Modifier.size(88.dp),
-                    contentScale = ContentScale.Fit
+                CircularProgressIndicator(
+                    color = colorResource(id = R.color.primaryColor),
+                    modifier = Modifier.size(40.dp),
+                    strokeWidth = 5.dp
                 )
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.75f)
+                    .padding(bottom = 8.dp),
+//            verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Hold and drag the lines",
+                        color = colorResource(id = R.color.primaryColor),
+                        fontFamily = FontFamily(Font(R.font.type_font)),
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                items(items = quotesList.take(3)) { quote ->
+                    if (!quote.isAnswered.value) QuoteItemCard(quoteItem = quote)
+                }
+            }
+            txtMarquee.text = "Chapter: " + viewModel.link.value
+                .substringAfterLast('/')
+                .dropLast(4).addSpaces() + "     " +
+                    "Chapter: " + viewModel.link.value.substringAfterLast('/').dropLast(4)
+                .addSpaces() +
+                    "     " +
+                    "Chapter: " + viewModel.link.value.substringAfterLast('/').dropLast(4)
+                .addSpaces()
         }
-        Text(
-            text = person.name,
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.white),
-            fontFamily = FontFamily(Font(R.font.type_font))
-//        fontWeight = FontWeight.Bold
-        )
     }
-}
 
-
-@Composable
-fun QuoteItemCard(quoteItem: QuoteItem) {
-    Card(
-        elevation = 10.dp,
-        backgroundColor = Color.White,
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier()
+    @Composable
+    fun BoxScope.PersonListContainer(
+        viewModel: QuotesFragmentViewModel,
+        quotesListSize: MutableState<Int?>,
+        lottieCorrect: View,
+        lottieWrong: View
     ) {
-        Row(
+        LazyRow(
+            modifier = Modifier
+                .fillMaxHeight(0.25f)
+                .fillMaxWidth()
+                .background(
+                    colorResource(id = R.color.transparent),
+                    shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
+                )
+                .padding(vertical = 0.dp, horizontal = 0.dp)
+                .align(Alignment.BottomCenter),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(10.dp)
+            horizontalArrangement = Arrangement.SpaceEvenly
+//        columns = GridCells.Fixed(count = 2)
         ) {
-            DragTarget(modifier = Modifier, dataToDrop = quoteItem) {
+            items(items = author) { person ->
+                PersonCard(person, viewModel, quotesListSize, lottieCorrect, lottieWrong)
+            }
+        }
+    }
+
+    @Composable
+    fun PersonCard(
+        person: Person,
+        viewModel: QuotesFragmentViewModel,
+        quotesListSize: MutableState<Int?>,
+        lottieCorrect: View,
+        lottieWrong: View
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            DropTarget<QuoteItem>(
+                modifier = Modifier
+                    .padding(0.dp),
+            ) { isInBound, authorItem ->
+                val bgColor = if (isInBound) {
+                    colorResource(id = R.color.primaryColor)
+                } else {
+                    colorResource(id = R.color.custom_blue)
+                }
+                authorItem?.let {
+                    if (isInBound) {
+                        if (it.author == person.name) {
+                            println("Right!!")
+                            viewModel.setPoints(1)
+                            coroutineScope.launch {
+                                lottieCorrect.isVisible = true
+                                delay(2500)
+                                lottieCorrect.isGone = true
+                            }
+                        } else {
+                            println("wrong!")
+                            viewModel.setPoints(-1)
+                            coroutineScope.launch {
+                                lottieWrong.isVisible = true
+                                delay(2500)
+                                lottieWrong.isGone = true
+                            }
+                        }
+                        it.isAnswered.value = true
+                        quotesListSize.value = quotesListSize.value?.plus(1)
+                        if (quotesListSize.value == 3) {
+                            quotesListSize.value = 0
+                            viewModel.updateList()
+                            viewModel.reLoadCounting()
+                        }
+                        println(quotesListSize.value)
+                    }
+                }
+
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .shadow(elevation = 0.dp, shape = CircleShape)
+                        .background(
+                            bgColor,
+                            CircleShape
+                        ),
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = quoteItem.quote,
-                        fontSize = 17.sp,
-                        fontFamily = FontFamily(Font(R.font.type_font)),
-                        color = Color.DarkGray,
-                        fontStyle = Normal,
-                        textAlign = TextAlign.Center,
+                    Image(
+                        painter = painterResource(id = person.profile),
+                        contentDescription = null,
+                        modifier = Modifier.size(88.dp),
+                        contentScale = ContentScale.Fit
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(20.dp))
+            Text(
+                text = person.name,
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.white),
+                fontFamily = FontFamily(Font(R.font.type_font))
+//        fontWeight = FontWeight.Bold
+            )
+        }
+    }
+
+    @Composable
+    fun QuoteItemCard(quoteItem: QuoteItem) {
+        Card(
+            elevation = 10.dp,
+            backgroundColor = Color.White,
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(10.dp)
+            ) {
+                DragTarget(modifier = Modifier, dataToDrop = quoteItem) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = quoteItem.quote,
+                            fontSize = 17.sp,
+                            fontFamily = FontFamily(Font(R.font.type_font)),
+                            color = Color.DarkGray,
+                            fontStyle = Normal,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+            }
         }
     }
 }
