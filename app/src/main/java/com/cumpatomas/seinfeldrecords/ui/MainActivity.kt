@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun alertsDialogSetUp() {
         coffeeDialog = RoundedDialog(
-            "Don't be a bad tipper...buy me a coffee!",
+            "Don't be a bad tipper...buy me a coffee!\n (and get rid of the annoying messages)",
             "Buy",
             "https://paypal.me/cumpatomas"
         )
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNavHostFragment() {
         val navHostFragment =
-            supportFragmentManager.findFragmentById(com.cumpatomas.seinfeldrecords.R.id.fragmentsContainer) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.fragmentsContainer) as NavHostFragment
         navController = navHostFragment.findNavController()
     }
 
@@ -148,7 +148,7 @@ class RoundedDialog(
             .setMessage(messageToShow)
             .setPositiveButton(
                 okButton
-            ) { dialog, _ ->
+            ) { _, _ ->
                 val url = link
                 val i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse(url)
@@ -159,4 +159,3 @@ class RoundedDialog(
 
     override fun getTheme() = R.style.DialogCorners
 }
-

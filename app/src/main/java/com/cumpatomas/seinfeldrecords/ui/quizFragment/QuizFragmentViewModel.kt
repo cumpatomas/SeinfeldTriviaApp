@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.QuestionModel
+import com.cumpatomas.seinfeldrecords.domain.GetUserAdsState
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
@@ -23,15 +24,16 @@ class QuizFragmentViewModel @Inject constructor(
     private val getPoints: GetUserPoints,
     private val updatePoints: SaveUserPoints,
     private val questionDao: QuestionDao,
-    private val updateAnsweredQuestion: UpdateAnsweredQuestion
+    private val updateAnsweredQuestion: UpdateAnsweredQuestion,
+    private val getUserAdsState: GetUserAdsState,
 ) : ViewModel(
 ) {
     private val _questionsList = MutableStateFlow(emptyList<QuestionModel>())
-    private val _correctAnswer = MutableStateFlow<String>("")
+    private val _correctAnswer = MutableStateFlow("")
     val correctAnswer = _correctAnswer.asStateFlow()
     private val _randomQuestion = MutableStateFlow("")
     val randomQuestion = _randomQuestion.asStateFlow()
-    private val _userPoints = MutableStateFlow<Int>(0)
+    private val _userPoints = MutableStateFlow(0)
     val userPoints = _userPoints.asStateFlow()
     var questionAnswered = false
     var answerIsCorrect = false
@@ -41,6 +43,8 @@ class QuizFragmentViewModel @Inject constructor(
     private val _totalQuestions = MutableStateFlow(0)
     val totalQuestions = _totalQuestions.asStateFlow()
     private var localQuestionList = emptyList<QuestionModel>()
+    private val _noAdsState = MutableStateFlow(false)
+    val noAdsState = _noAdsState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -55,16 +59,16 @@ class QuizFragmentViewModel @Inject constructor(
                 _correctAnswer.value = notAnsweredList[random].answer
             }.join()
             _totalQuestions.value = localQuestionList.size
+            _noAdsState.value = getUserAdsState.invoke()
         }
     }
 
     fun getNewQuestion() {
         viewModelScope.launch(IO) {
-/*            val updatedList = questionDao.getQuestionsList().map { it.toModel() }
-            val notAnsweredList = updatedList.filter { !it.answered }*/
             val random = (0..localQuestionList.lastIndex).shuffled().random()
             _randomQuestion.value = localQuestionList[random].question
             _correctAnswer.value = localQuestionList[random].answer
+            _noAdsState.value = getUserAdsState.invoke()
         }
     }
 

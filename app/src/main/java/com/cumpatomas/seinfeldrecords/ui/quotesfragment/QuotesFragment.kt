@@ -77,7 +77,7 @@ class QuotesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.quotes_fragment, container, false)
-        tickerView = view.findViewById<TickerView>(R.id.quizPointsTickerView)
+        tickerView = view.findViewById(R.id.quizPointsTickerView)
 
         view.findViewById<ComposeView>(R.id.composeView).setContent {}
 
@@ -259,7 +259,6 @@ class QuotesFragment : Fragment() {
                 authorItem?.let {
                     if (isInBound) {
                         if (it.author == person.name) {
-                            println("Right!!")
                             viewModel.setPoints(1)
                             coroutineScope.launch {
                                 lottieCorrect.isVisible = true
@@ -267,7 +266,6 @@ class QuotesFragment : Fragment() {
                                 lottieCorrect.isGone = true
                             }
                         } else {
-                            println("wrong!")
                             viewModel.setPoints(-1)
                             coroutineScope.launch {
                                 lottieWrong.isVisible = true
@@ -282,7 +280,6 @@ class QuotesFragment : Fragment() {
                             viewModel.updateList()
                             viewModel.reLoadCounting()
                         }
-                        println(quotesListSize.value)
                     }
                 }
 
@@ -320,7 +317,9 @@ class QuotesFragment : Fragment() {
             elevation = 10.dp,
             backgroundColor = Color.White,
             shape = RoundedCornerShape(10.dp),
-            modifier = modifier()
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -347,8 +346,4 @@ class QuotesFragment : Fragment() {
     }
 }
 
-@Composable
-private fun modifier() = Modifier
-    .padding(4.dp)
-    .fillMaxWidth()
 

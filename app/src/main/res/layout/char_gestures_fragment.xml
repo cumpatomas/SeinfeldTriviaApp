@@ -50,7 +50,7 @@
             android:fontFamily="@font/button_font"
             android:paddingTop="5sp"
             android:elevation="12dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:alpha="0.8"
             android:src="@drawable/button_play_seinfeld4"
             android:textSize="20sp"

@@ -30,8 +30,6 @@ class CharGesturesViewModel @Inject constructor(
     val gesturesList = _gesturesList.asStateFlow()
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
-    private val _buttonIsPlaying = MutableStateFlow(false)
-    val buttonIsPlaying = _buttonIsPlaying.asStateFlow()
     private val _randomGestureId = MutableStateFlow("")
     val randomGestureId = _randomGestureId.asStateFlow()
     private val _userPoints = MutableStateFlow<Int>(0)
@@ -62,10 +60,6 @@ class CharGesturesViewModel @Inject constructor(
         if (_gesturesList.value.filter { !it.clicked }.isNotEmpty())
             _randomGestureId.value =
                 _gesturesList.value.filter { !it.clicked }.shuffled().random().id
-    }
-
-    fun buttonPlay(boolean: Boolean) {
-        _buttonIsPlaying.value = boolean
     }
 
     fun setPoints(points: Int) {

@@ -29,6 +29,7 @@ class QuizFragment : Fragment() {
     private var correctAnswer = ""
     private var submittedAnswer = ""
     private var answerToList = listOf<String>()
+    private var noAdsState = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,7 +87,8 @@ class QuizFragment : Fragment() {
             setCorrectAnswerScreen()
             viewModel.updateAnswerToTrue()
             viewModel.setPoints(1)
-            if (viewModel.questionsCorrect.value % 8 == 0 && viewModel.questionsCorrect.value > 1) {
+
+            if (viewModel.questionsCorrect.value % 5 == 0 && viewModel.questionsCorrect.value > 1 && !noAdsState) {
                 RoundedDialog(
                     "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
                     "Buy",
@@ -130,6 +132,11 @@ class QuizFragment : Fragment() {
     private fun initCollectors() {
         lifecycleScope.launch {
             viewModel.getPoints()
+            launch() {
+                viewModel.noAdsState.collectLatest { state ->
+                    noAdsState = state
+                }
+            }
 
             launch() {
                 viewModel.userPoints.collectLatest {

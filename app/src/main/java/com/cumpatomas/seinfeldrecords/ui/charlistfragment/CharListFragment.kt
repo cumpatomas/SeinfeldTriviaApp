@@ -252,8 +252,8 @@ class CharListFragment : Fragment() {
             }
         }
         compose.bringToFront()
-
         binding.tvLoading.isGone = true
+        viewmodel.getGestures()
         initListeners()
         initCollectors()
         initRecyclerView()
@@ -301,6 +301,7 @@ class CharListFragment : Fragment() {
                     }
                 }
                 launch {
+                    viewmodel.getGestures()
                     viewmodel.gesturesList.collectLatest { gestures ->
                         gesturesList = gestures
                         adapter.charGestures = gestures

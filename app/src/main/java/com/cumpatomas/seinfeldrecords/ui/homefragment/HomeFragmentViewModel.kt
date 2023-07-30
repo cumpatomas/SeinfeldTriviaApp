@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.core.ex.addSpaces
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
+import com.cumpatomas.seinfeldrecords.domain.GetUserAdsState
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.MAX_POINTS
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
@@ -25,6 +26,7 @@ class HomeFragmentViewModel @Inject constructor(
     private val script: GetRandomScript,
     val getPoints: GetUserPoints,
     private val updatePoints: SaveUserPoints,
+    private val getUserAdsState: GetUserAdsState,
 ) : ViewModel() {
     private val _list = MutableStateFlow<List<String>>(emptyList())
     val list = _list.asStateFlow()
@@ -39,15 +41,18 @@ class HomeFragmentViewModel @Inject constructor(
     var gifActive = false
     var correctAnswer = false
     var timeOut = false
-    private val _userPoints = MutableStateFlow<Int>(0)
+    private val _userPoints = MutableStateFlow(0)
     val userPoints = _userPoints.asStateFlow()
-    private val _nextButtonPressedTimes = MutableStateFlow<Int>(0)
+    private val _nextButtonPressedTimes = MutableStateFlow(0)
     val nextButtonPressedTimes = _nextButtonPressedTimes.asStateFlow()
+    private val _noAdsState = MutableStateFlow(false)
+    val noAdsState = _noAdsState.asStateFlow()
 
     init {
         viewModelScope.launch(IO) {
             _userPoints.value = getPoints.invoke()
             getNewScript()
+            _noAdsState.value = getUserAdsState.invoke()
         }
     }
 
@@ -61,13 +66,10 @@ class HomeFragmentViewModel @Inject constructor(
             launch {
                 randomLines = script.invoke(urls.shuffled().random())
             }.join()
-            println("randomLines: ")
-            println(randomLines)
             _list.value = emptyList()
             for (i in randomLines) {
                 _list.value += i
             }
-            println(_list.value)
             counting()
             _titlesList.value = emptyList<String>().toMutableList()
             _titlesList.value =
@@ -78,8 +80,7 @@ class HomeFragmentViewModel @Inject constructor(
                 tempList += title.addSpaces()
             }
             _titlesList.value = tempList.shuffled().take(3).toMutableList()
-            println("titulos")
-            println(_titlesList.value)
+            _noAdsState.value = getUserAdsState.invoke()
         }
     }
 

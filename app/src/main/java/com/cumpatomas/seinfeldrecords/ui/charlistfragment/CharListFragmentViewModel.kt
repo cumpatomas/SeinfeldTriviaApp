@@ -39,7 +39,6 @@ class CharListFragmentViewModel @Inject constructor(
     private val _userPoints = MutableStateFlow<Int>(0)
     val userPoints = _userPoints.asStateFlow()
 
-    // Declaramos el Estado de la Vista para actualizar
     private val _viewState = Channel<CharListViewState>()
     val viewState = _viewState.receiveAsFlow()
 
@@ -52,6 +51,7 @@ class CharListFragmentViewModel @Inject constructor(
             launch {
                 questionService.getQuestions()
             }
+
 
             launch {
                 _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
@@ -75,6 +75,15 @@ class CharListFragmentViewModel @Inject constructor(
         viewModelScope.launch(IO) {
             _userPoints.value = pointsProvider.invoke()
             delay(2000)
+        }
+    }
+
+
+    fun getGestures() {
+        viewModelScope.launch(IO) {
+            launch {
+                _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
+            }.join()
         }
     }
 }

@@ -1,9 +1,6 @@
 package com.cumpatomas.seinfeldrecords
 
-import android.content.Context
 import android.os.Bundle
-import android.provider.Settings
-import android.provider.Settings.Global.putInt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -26,27 +23,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeFragmentViewModel by viewModels()
     private var _binding: HomeFragmentBinding? = null
+    private var noAdsState = false
     private val binding get() = _binding!!
     var correctTitle = ""
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = HomeFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         initCollectors()
         initListeners()
         viewModel.getPoints
@@ -63,7 +57,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun initListeners() {
-
         lifecycleScope.launch() {
             binding.btNext.isEnabled = false
             viewModel.timer.collectLatest {
@@ -72,9 +65,9 @@ class HomeFragment : Fragment() {
                 ticker.text = it.toString()
                 if (it <= 5) binding.counterTickerView.textColor = resources.getColor(R.color.red)
                 if (it == 0) {
-                     if (!viewModel.timeOut ) {
-                         viewModel.setPoints(-3)
-                     }
+                    if (!viewModel.timeOut) {
+                        viewModel.setPoints(-3)
+                    }
                     viewModel.timeOut = true
                     binding.answersContainer.visibility = INVISIBLE
                     binding.btNext.isEnabled = true
@@ -84,21 +77,16 @@ class HomeFragment : Fragment() {
         }
 
         binding.btNext.setOnClickListener {
-
-
             viewModel.timeOut = false
             lifecycleScope.launch {
                 binding.scrollScript.scrollTo(0, 0)
                 binding.scrollScript.isVerticalScrollBarEnabled = true
                 launch {
-
                     viewModel.getNewScript()
                     binding.progressBar.isVisible = viewModel.loading.value
-
                 }.join()
                 launch {
                     getScriptText()
-
                 }.join()
                 setNextVisibility()
             }
@@ -184,7 +172,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun setCorrectAnswerScreen() {
         viewModel.countingJob?.cancel()
         binding.scrollScript.isVerticalScrollBarEnabled = false
@@ -203,7 +190,7 @@ class HomeFragment : Fragment() {
         binding.pointsTickerView.text = viewModel.userPoints.value.toString()
         viewModel.resetCounter()
         viewModel.countNextButtonPressed()
-        if (viewModel.nextButtonPressedTimes.value % 5 == 0) {
+        if (viewModel.nextButtonPressedTimes.value % 5 == 0 && !noAdsState) {
             RoundedDialog(
                 "Having a good look Costanza??\nDon't be a bad tipper...buy me a coffee!",
                 "Buy",
@@ -212,9 +199,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun initCollectors() {
-
         lifecycleScope.launch {
             launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -222,17 +207,21 @@ class HomeFragment : Fragment() {
                 }
             }
             launch() {
-
-                    viewModel.userPoints.collectLatest {
-                        val ticker = binding.pointsTickerView
-                        ticker.setCharacterLists(TickerUtils.provideNumberList())
-                        ticker.text = it.toString()
-                    }
+                viewModel.userPoints.collectLatest {
+                    val ticker = binding.pointsTickerView
+                    ticker.setCharacterLists(TickerUtils.provideNumberList())
+                    ticker.text = it.toString()
                 }
-                binding.answersContainer.visibility = INVISIBLE
-                getScriptText()
-        }
+            }
 
+            launch() {
+                viewModel.noAdsState.collectLatest { state ->
+                    noAdsState = state
+                }
+            }
+            binding.answersContainer.visibility = INVISIBLE
+            getScriptText()
+        }
     }
 
     private fun getScriptText() {
@@ -245,10 +234,6 @@ class HomeFragment : Fragment() {
                         scriptList.filter { it.isNotEmpty() }.drop(1).joinToString("\n\n")
                             .replace("%", "")
                     correctTitle = scriptList.firstOrNull().toString()
-                    if (correctTitle.contains(":") || correctTitle.length > 20) {
-                        println("Put episode with this line in blacklist:")
-                        println(correctTitle)
-                    }
                     viewModel.titlesList.collectLatest { titlesList ->
                         val editList = titlesList.shuffled().take(3).toMutableList()
                         if (titlesList.size > 2) {
@@ -264,7 +249,7 @@ class HomeFragment : Fragment() {
                                     binding.tvAnswer4.text = editList.random()
                                     editList.remove(binding.tvAnswer4.text)
                                 } else editList.add("")
-                                println("correcttitle: $correctTitle")
+                                println("correct title: $correctTitle")
                                 binding.progressBar.isVisible = false
                                 delay(500)
                             }.join()

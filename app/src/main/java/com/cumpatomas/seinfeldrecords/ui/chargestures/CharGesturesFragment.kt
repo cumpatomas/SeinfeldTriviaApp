@@ -2,7 +2,6 @@ package com.cumpatomas.seinfeldrecords.ui.chargestures
 
 import android.annotation.SuppressLint
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -80,6 +79,7 @@ class CharGesturesFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initListeners() {
         lifecycleScope.launch {
             launch {
@@ -87,17 +87,9 @@ class CharGesturesFragment : Fragment() {
                     binding.progressBar.isVisible = loading
                     if (!loading) {
                         setButtonRandomAudio()
-                        binding.btPlayThePhrase.alpha = 1f
+                        binding.btPlayThePhrase.isVisible = true
                     } else
-                        binding.btPlayThePhrase.alpha = 0.0f
-                }
-            }
-
-            launch {
-                viewModel.buttonIsPlaying.collectLatest { buttonIsPlaying ->
-                    binding.btPlayThePhrase.isClickable = !buttonIsPlaying
-                    binding.lottieSound.isVisible = buttonIsPlaying
-                    binding.btPlayThePhrase.isVisible = !buttonIsPlaying
+                        binding.btPlayThePhrase.isGone = true
                 }
             }
 
@@ -115,20 +107,12 @@ class CharGesturesFragment : Fragment() {
                 }
             }
         }
-    }
 
-    private fun setButtonRandomAudio() {
-        binding.btPlayThePhrase.setOnClickListener {
-            val randomAudio = gesturesList.filter { it.id == viewModel.randomGestureId.value }
+        adapter.onItemClickListener = { charGesture ->
+            if (viewModel.randomGestureId.value == gesturesList[gesturesList.indexOf(charGesture)].id) {
+                gesturesList[gesturesList.indexOf(charGesture)].clicked = true
 
-            playAudio(randomAudio[0].audioLink)
-        }
-
-        adapter.onItemClickListener = {
-            if (viewModel.randomGestureId.value == gesturesList[gesturesList.indexOf(it)].id) {
-                gesturesList[gesturesList.indexOf(it)].clicked = true
-
-                playAudio(CORRECT_AUDIO)
+                playAudio(CORRECT_AUDIO, true)
                 updateList(gesturesList)
                 viewModel.getRandomId()
                 viewModel.countQuestion()
@@ -136,12 +120,20 @@ class CharGesturesFragment : Fragment() {
             } else {
                 gesturesList.forEach { it.clicked = false }
 
-                playAudio(WRONG_AUDIO)
+                playAudio(WRONG_AUDIO, true)
                 updateList(gesturesList)
                 viewModel.getRandomId()
                 viewModel.setPoints(-1)
                 viewModel.resetQuestion()
             }
+        }
+    }
+
+    private fun setButtonRandomAudio() {
+        binding.btPlayThePhrase.setOnClickListener {
+            val randomAudio = gesturesList.filter { it.id == viewModel.randomGestureId.value }
+
+            playAudio(randomAudio[0].audioLink)
         }
     }
 
@@ -155,8 +147,9 @@ class CharGesturesFragment : Fragment() {
 
     private fun winAnimation() {
         val randomWrongGif = RandomGifProvider().randomCorrectGif
-        playAudio(TEN_POINTS_AUDIO)
+        playAudio(TEN_POINTS_AUDIO, true)
         viewModel.setPoints(10)
+        binding.btPlayThePhrase.isGone = true
         viewModel.setCharScreenComplete(navArgs.selectedChar)
         binding.rvCharGesturesRecycler.isGone = true
         binding.lottieSound.isGone = true
@@ -177,15 +170,14 @@ class CharGesturesFragment : Fragment() {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun playAudio(url: String) {
-        var mediaPlayer: MediaPlayer? = MediaPlayer()
-        if (mediaPlayer?.isPlaying == true) {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-            mediaPlayer = null
-        }
-//        mediaPlayer.setAudioStreamType((AudioManager.STREAM_MUSIC))
-        mediaPlayer?.setAudioAttributes(
+    private fun playAudio(url: String, rightOrWrong: Boolean = false) {
+        val mediaPlayer: MediaPlayer = MediaPlayer()
+        /*        if (mediaPlayer?.isPlaying == true) {
+                    mediaPlayer.stop()
+                    mediaPlayer.release()
+                    mediaPlayer = null
+                }*/
+        mediaPlayer.setAudioAttributes(
             AudioAttributes
                 .Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -194,40 +186,44 @@ class CharGesturesFragment : Fragment() {
         )
 
         try {
-            viewModel.buttonPlay(true)
-            mediaPlayer?.setDataSource(url)
-            mediaPlayer?.prepare()
-            //mp3 will be started after completion of preparing...
-            mediaPlayer?.setOnPreparedListener(MediaPlayer.OnPreparedListener { player ->
-                player.start()
+            if (!rightOrWrong) {
+                binding.lottieSound.isVisible = true
+                binding.btPlayThePhrase.isClickable = false
+                binding.btPlayThePhrase.isGone = true
+            }
 
-                if (url == CORRECT_AUDIO || url == WRONG_AUDIO) {
-                    viewModel.buttonPlay(false)
-                } else {
-                    viewModel.buttonPlay(true)
-                }
-                if (url == TEN_POINTS_AUDIO) {
-                    viewModel.buttonPlay(false)
-                    binding.btPlayThePhrase.isGone = true
-                }
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepare()
+            //mp3 will be started after completion of preparing...
+            mediaPlayer.setOnPreparedListener { player ->
+                player.start()
                 mediaPlayer.setOnCompletionListener {
-                    viewModel.buttonPlay(false)
-                    binding.btPlayThePhrase.isVisible = true
+                    if (!rightOrWrong) {
+                        binding.btPlayThePhrase.isClickable = true
+                        binding.btPlayThePhrase.isVisible = true
+                        binding.lottieSound.isGone = true
+                    }
                 }
-            })
+            }
         } catch (e: IOException) {
             e.printStackTrace()
+            mediaPlayer.stop()
+            mediaPlayer.release()
+            binding.btPlayThePhrase.isClickable = true
+            binding.btPlayThePhrase.isVisible = true
+            binding.lottieSound.isGone = true
+            playAudio(url)
         }
     }
 
     private fun initRecyclerView() {
         val recyclerView =
-            binding.rvCharGesturesRecycler// encontramos el Recycler del Main LAYOUT xml
+            binding.rvCharGesturesRecycler
         recyclerView.layoutManager =
             GridLayoutManager(
                 context,
                 3
-            ) // si cambiamos el Manager aqui podriamos hacer listados de GRID u otro tipo! Investigar!
+            )
         recyclerView.adapter = this.adapter
     }
 

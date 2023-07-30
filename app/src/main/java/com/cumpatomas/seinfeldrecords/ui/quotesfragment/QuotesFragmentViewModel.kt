@@ -29,15 +29,14 @@ class QuotesFragmentViewModel @Inject constructor(
     val quotesListViewModel = _quotesListViewModel.asStateFlow()
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
-    private val _userPoints = MutableStateFlow<Int>(0)
+    private val _userPoints = MutableStateFlow(0)
     val userPoints = _userPoints.asStateFlow()
     private val _link = MutableStateFlow("")
     val link = _link.asStateFlow()
-    private val _reloadTimes= MutableStateFlow<Int>(0)
+    private val _reloadTimes = MutableStateFlow(0)
     val reloadTimes = _reloadTimes.asStateFlow()
-    private val _noAdsState = MutableStateFlow<Boolean>(false)
+    private val _noAdsState = MutableStateFlow(false)
     val noAdsState = _noAdsState.asStateFlow()
-
 
     init {
         _isLoading.value = true
@@ -101,8 +100,9 @@ class QuotesFragmentViewModel @Inject constructor(
             }
         }
     }
+
     fun reLoadCounting() {
-        _reloadTimes.value ++
+        _reloadTimes.value++
     }
 
     fun resetReloadTimes() {
