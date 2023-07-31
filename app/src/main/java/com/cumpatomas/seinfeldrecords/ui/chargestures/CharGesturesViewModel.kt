@@ -1,5 +1,7 @@
 package com.cumpatomas.seinfeldrecords.ui.chargestures
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
@@ -16,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +39,8 @@ class CharGesturesViewModel @Inject constructor(
     val userPoints = _userPoints.asStateFlow()
     private val _questionsCorrect = MutableStateFlow(0)
     val questionsCorrect = _questionsCorrect.asStateFlow()
+    private val _playing = MutableStateFlow(false)
+    val playing = _playing.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -93,6 +98,70 @@ class CharGesturesViewModel @Inject constructor(
     fun setCharScreenComplete(selectedChar: String) {
         viewModelScope.launch(IO) {
             charCompleted.invoke(selectedChar)
+        }
+    }
+
+    fun playAudio(url: String) {
+        val mediaPlayer: MediaPlayer = MediaPlayer()
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes
+                .Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+
+        try {
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepare()
+            //mp3 will be started after completion of preparing...
+            mediaPlayer.setOnPreparedListener { player ->
+                player.start()
+                _playing.value = true
+                mediaPlayer.setOnCompletionListener {
+                    mediaPlayer.stop()
+                    mediaPlayer.release()
+                    _playing.value = false
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            mediaPlayer.stop()
+            mediaPlayer.release()
+
+            playAudio(url)
+        }
+    }
+
+    fun playShortAudio(url: String) {
+        val mediaPlayer: MediaPlayer = MediaPlayer()
+
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes
+                .Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+
+        try {
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepare()
+            //mp3 will be started after completion of preparing...
+            mediaPlayer.setOnPreparedListener { player ->
+                player.start()
+
+                mediaPlayer.setOnCompletionListener {
+                    mediaPlayer.stop()
+                    mediaPlayer.release()
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            mediaPlayer.stop()
+            mediaPlayer.release()
+
+            playAudio(url)
         }
     }
 }
