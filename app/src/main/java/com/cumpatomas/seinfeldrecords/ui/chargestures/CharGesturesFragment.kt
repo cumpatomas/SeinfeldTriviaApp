@@ -1,7 +1,8 @@
 package com.cumpatomas.seinfeldrecords.ui.chargestures
 
 import android.annotation.SuppressLint
-import android.graphics.Rect
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cumpatomas.seinfeldrecords.R
 import com.cumpatomas.seinfeldrecords.data.database.RandomGifProvider
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
@@ -25,11 +25,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 const val CORRECT_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/correct_answer_plop.mp3"
 const val WRONG_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/wrong_answer.mp3"
 const val TEN_POINTS_AUDIO = "https://seinfeldapp-29d5f.web.app/audios/win_10_points.mp3"
-const val WIN_TEXT = "Yada    yada    yada....     You win 10 points Mr Eyebrow!"
+const val WIN_TEXT = "You win 10 points Mr. Eyebrow!    You win 10 points Mr Eyebrow!"
 
 @AndroidEntryPoint
 class CharGesturesFragment : Fragment() {
@@ -62,19 +63,6 @@ class CharGesturesFragment : Fragment() {
 
     private fun initCollectors() {
         lifecycleScope.launch {
-            launch {
-                viewModel.playing.collectLatest { playing ->
-                    if (playing) {
-                        binding.lottieSound.isVisible = true
-                        binding.btPlayThePhrase.isClickable = false
-                        binding.btPlayThePhrase.isGone = true
-                    } else {
-                        binding.btPlayThePhrase.isClickable = true
-                        binding.btPlayThePhrase.isVisible = true
-                        binding.lottieSound.isGone = true
-                    }
-                }
-            }
             launch() {
                 viewModel.userPoints.collectLatest {
                     val ticker = binding.pointsTickerViewCharList
@@ -99,9 +87,9 @@ class CharGesturesFragment : Fragment() {
                     binding.progressBar.isVisible = loading
                     if (!loading) {
                         setButtonRandomAudio()
-                        binding.btPlayThePhrase.alpha = 1f
+                        binding.btPlayThePhrase.isVisible = true
                     } else
-                        binding.btPlayThePhrase.alpha = 0f
+                        binding.btPlayThePhrase.isGone = true
                 }
             }
 
@@ -124,7 +112,7 @@ class CharGesturesFragment : Fragment() {
             if (viewModel.randomGestureId.value == gesturesList[gesturesList.indexOf(charGesture)].id) {
                 gesturesList[gesturesList.indexOf(charGesture)].clicked = true
 
-                viewModel.playShortAudio(CORRECT_AUDIO)
+                playAudio(CORRECT_AUDIO, true)
                 updateList(gesturesList)
                 viewModel.getRandomId()
                 viewModel.countQuestion()
@@ -132,7 +120,7 @@ class CharGesturesFragment : Fragment() {
             } else {
                 gesturesList.forEach { it.clicked = false }
 
-                viewModel.playShortAudio(WRONG_AUDIO)
+                playAudio(WRONG_AUDIO, true)
                 updateList(gesturesList)
                 viewModel.getRandomId()
                 viewModel.setPoints(-1)
@@ -145,7 +133,7 @@ class CharGesturesFragment : Fragment() {
         binding.btPlayThePhrase.setOnClickListener {
             val randomAudio = gesturesList.filter { it.id == viewModel.randomGestureId.value }
 
-            viewModel.playAudio(randomAudio[0].audioLink)
+            playAudio(randomAudio[0].audioLink)
         }
     }
 
@@ -159,10 +147,9 @@ class CharGesturesFragment : Fragment() {
 
     private fun winAnimation() {
         val randomWrongGif = RandomGifProvider().randomCorrectGif
-        viewModel.playShortAudio(TEN_POINTS_AUDIO)
+        playAudio(TEN_POINTS_AUDIO, true)
         viewModel.setPoints(10)
         binding.btPlayThePhrase.isGone = true
-        binding.btPlayThePhrase.alpha = 0f
         viewModel.setCharScreenComplete(navArgs.selectedChar)
         binding.rvCharGesturesRecycler.isGone = true
         binding.lottieSound.isGone = true
@@ -182,6 +169,53 @@ class CharGesturesFragment : Fragment() {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun playAudio(url: String, rightOrWrong: Boolean = false) {
+        val mediaPlayer: MediaPlayer = MediaPlayer()
+        /*        if (mediaPlayer?.isPlaying == true) {
+                    mediaPlayer.stop()
+                    mediaPlayer.release()
+                    mediaPlayer = null
+                }*/
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes
+                .Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+
+        try {
+            if (!rightOrWrong) {
+                binding.lottieSound.isVisible = true
+                binding.btPlayThePhrase.isClickable = false
+                binding.btPlayThePhrase.isGone = true
+            }
+
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepare()
+            //mp3 will be started after completion of preparing...
+            mediaPlayer.setOnPreparedListener { player ->
+                player.start()
+                mediaPlayer.setOnCompletionListener {
+                    if (!rightOrWrong) {
+                        binding.btPlayThePhrase.isClickable = true
+                        binding.btPlayThePhrase.isVisible = true
+                        binding.lottieSound.isGone = true
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            mediaPlayer.stop()
+            mediaPlayer.release()
+            binding.btPlayThePhrase.isClickable = true
+            binding.btPlayThePhrase.isVisible = true
+            binding.lottieSound.isGone = true
+            playAudio(url)
+        }
+    }
+
     private fun initRecyclerView() {
         val recyclerView =
             binding.rvCharGesturesRecycler
@@ -190,50 +224,10 @@ class CharGesturesFragment : Fragment() {
                 context,
                 3
             )
-        val spanCount = 3
-        val spacing = 40 // 50px
-        val includeEdge = true
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
         recyclerView.adapter = this.adapter
     }
 
     private fun updateList(list: MutableList<CharGestures>) {
         adapter.setList(list = list)
-    }
-
-    public class GridSpacingItemDecoration(
-        private val spanCount: Int,
-        private val spacing: Int,
-        private val includeEdge: Boolean
-    ) :
-        RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            super.getItemOffsets(outRect, view, parent, state)
-            val position = parent.getChildAdapterPosition(view) // item position
-            val column = position % spanCount // item column
-            if (includeEdge) {
-                outRect.left =
-                    spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right =
-                    (column + 1) * spacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing
-                }
-                outRect.bottom = spacing // item bottom
-            } else {
-                outRect.left =
-                    column * spacing / spanCount // column * ((1f / spanCount) * spacing)
-                outRect.right =
-                    spacing - (column + 1) * spacing / spanCount // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing // item top
-                }
-            }
-        }
     }
 }
