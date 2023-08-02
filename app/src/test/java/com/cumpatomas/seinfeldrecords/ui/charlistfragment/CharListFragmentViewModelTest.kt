@@ -84,7 +84,7 @@ class CharListFragmentViewModelTest {
             gesturesProvider,
             pointsProvider,
             questionService,
-
+            questionDao
         )
     }
 
