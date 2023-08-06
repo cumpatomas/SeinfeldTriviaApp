@@ -3,6 +3,7 @@ package com.cumpatomas.seinfeldrecords.ui.homefragment
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.cumpatomas.seinfeldrecords.domain.GetRandomScript
+import com.cumpatomas.seinfeldrecords.domain.GetUserAdsState
 import com.cumpatomas.seinfeldrecords.domain.GetUserPoints
 import com.cumpatomas.seinfeldrecords.domain.SaveUserPoints
 import com.cumpatomas.seinfeldrecords.domain.ScrapScripts
@@ -32,6 +33,7 @@ class HomeFragmentViewModelTest() {
     private val getPoints: GetUserPoints = mockk()
     private val updatePoints: SaveUserPoints = mockk(relaxed = true) // mocks the savepoints function but as it is relaxed we don't have to mock the data base
     private val listTest = mutableListOf("uno", "dos", "tres")
+    private val getUserAdsState: GetUserAdsState = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -44,6 +46,7 @@ class HomeFragmentViewModelTest() {
             randomScript,
             getPoints,
             updatePoints,
+            getUserAdsState
         )
     }
 

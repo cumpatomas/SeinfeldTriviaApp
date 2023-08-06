@@ -14,6 +14,7 @@ class GetCharListUseCase @Inject constructor(
             is ResponseEvent.Success -> {
                 result.data
             }
+
             is ResponseEvent.Error -> {
                 Log.d("Exception", result.exception.stackTraceToString())
                 emptyList()
