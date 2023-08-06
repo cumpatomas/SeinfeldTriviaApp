@@ -1,4 +1,6 @@
 # Seinfun - Seinfeld Trivia App
+![seinfun_icon](https://github.com/cumpatomas/SeinfeldTriviaApp/assets/102058754/376f868d-0b4a-4cb3-9470-f8e7482b7481)
+
 Working on a Seinfeld fan trivia app to put in practice Flows, Retrofit, JSON, Room.
 I also scrap the scripts from a website and take some random lines.
 
