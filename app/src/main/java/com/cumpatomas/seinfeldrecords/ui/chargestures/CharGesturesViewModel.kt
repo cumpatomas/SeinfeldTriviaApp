@@ -119,8 +119,6 @@ class CharGesturesViewModel @Inject constructor(
                 player.start()
                 _playing.value = true
                 mediaPlayer.setOnCompletionListener {
-                    mediaPlayer.stop()
-                    mediaPlayer.release()
                     _playing.value = false
                 }
             }
@@ -129,19 +127,13 @@ class CharGesturesViewModel @Inject constructor(
         }
     }
 
-    fun playShortAudio(url: String, winning: Boolean = false) {
+    fun playShortAudio(url: String) {
         val mediaPlayer: MediaPlayer = MediaPlayer()
 
         mediaPlayer.setAudioAttributes(
             AudioAttributes
                 .Builder()
-                .setContentType(
-                    if (!winning) {
-                        AudioAttributes.CONTENT_TYPE_SONIFICATION
-                    } else {
-                        AudioAttributes.CONTENT_TYPE_MUSIC
-                    }
-                )
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
@@ -152,11 +144,6 @@ class CharGesturesViewModel @Inject constructor(
             //mp3 will be started after completion of preparing...
             mediaPlayer.setOnPreparedListener { player ->
                 player.start()
-
-                mediaPlayer.setOnCompletionListener {
-                    mediaPlayer.stop()
-                    mediaPlayer.release()
-                }
             }
         } catch (e: IOException) {
             e.printStackTrace()

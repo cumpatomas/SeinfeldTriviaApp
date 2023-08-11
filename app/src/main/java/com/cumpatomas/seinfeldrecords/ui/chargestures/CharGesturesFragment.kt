@@ -158,7 +158,7 @@ class CharGesturesFragment : Fragment() {
 
     private fun winAnimation() {
         val randomWrongGif = RandomGifProvider().randomCorrectGif
-        viewModel.playShortAudio(TEN_POINTS_AUDIO, true)
+        viewModel.playShortAudio(TEN_POINTS_AUDIO)
         binding.btPlayThePhrase.alpha = 0f
         binding.lottieSound.alpha = 0f
         binding.btPlayThePhrase.isClickable = false
