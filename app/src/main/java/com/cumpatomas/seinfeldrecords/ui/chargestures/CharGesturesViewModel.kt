@@ -124,6 +124,7 @@ class CharGesturesViewModel @Inject constructor(
             }
         } catch (e: IOException) {
             e.printStackTrace()
+            _playing.value = false
         }
     }
 
@@ -145,8 +146,12 @@ class CharGesturesViewModel @Inject constructor(
             mediaPlayer.setOnPreparedListener { player ->
                 player.start()
             }
+            mediaPlayer.setOnCompletionListener {
+                _playing.value = false
+            }
         } catch (e: IOException) {
             e.printStackTrace()
+            _playing.value = false
         }
     }
 }
