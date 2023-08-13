@@ -147,7 +147,7 @@ class CharGesturesViewModel @Inject constructor(
                 player.start()
             }
             mediaPlayer.setOnCompletionListener {
-                _playing.value = false
+
             }
         } catch (e: IOException) {
             e.printStackTrace()

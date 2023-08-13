@@ -122,8 +122,8 @@ class CharGesturesFragment : Fragment() {
         adapter.onItemClickListener = { charGesture ->
             if (viewModel.randomGestureId.value == gesturesList[gesturesList.indexOf(charGesture)].id) {
                 gesturesList[gesturesList.indexOf(charGesture)].clicked = true
-
-                viewModel.playShortAudio(CORRECT_AUDIO)
+/*
+                viewModel.playShortAudio(CORRECT_AUDIO)*/
                 updateList(gesturesList)
                 viewModel.getRandomId()
                 viewModel.countQuestion()
