@@ -296,7 +296,7 @@ class CharListFragment : Fragment() {
                     }
                 }
                 launch {
-                    viewmodel.pointsCircle.collectLatest { state ->
+                    viewmodel.pointsCircleIsVisible.collectLatest { state ->
                         binding.clBottomBarContainer.isVisible = state
                     }
                 }

@@ -3,7 +3,6 @@ package com.cumpatomas.seinfeldrecords.ui.charlistfragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cumpatomas.seinfeldrecords.data.database.GestureDao
-import com.cumpatomas.seinfeldrecords.data.database.QuestionDao
 import com.cumpatomas.seinfeldrecords.data.database.entities.toModel
 import com.cumpatomas.seinfeldrecords.data.model.CharGestures
 import com.cumpatomas.seinfeldrecords.data.model.SeinfeldChar
@@ -34,40 +33,42 @@ class CharListFragmentViewModel @Inject constructor(
     val gesturesList = _gesturesList.asStateFlow()
     private val _animationIn = MutableStateFlow(false)
     val animationIn = _animationIn.asStateFlow()
-    private val _pointsCircle = MutableStateFlow(false)
-    val pointsCircle = _pointsCircle.asStateFlow()
+    private val _pointsCircleIsVisible = MutableStateFlow(false)
+    val pointsCircleIsVisible = _pointsCircleIsVisible.asStateFlow()
     private val _userPoints = MutableStateFlow<Int>(0)
     val userPoints = _userPoints.asStateFlow()
-
     private val _viewState = Channel<CharListViewState>()
     val viewState = _viewState.receiveAsFlow()
 
     init {
+        viewModelScope.launch {
+            _viewState.send(CharListViewState(loading = true))
+        }
+
         viewModelScope.launch(IO) {
-            launch {
-                _userPoints.value = pointsProvider.invoke()
-                delay(2000)
-            }
+            getUserPoints()
+
             launch {
                 questionService.getQuestions()
             }
+            launch {
+                _charList.value = charProvider.invoke()
+            }.join()
 
+            _viewState.send(CharListViewState(loading = false))
 
             launch {
                 _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
-            }.join()
+            }
+        }
 
-            _viewState.send(CharListViewState(loading = true))
-
-            _charList.value = charProvider.invoke()
-
-            _viewState.send(CharListViewState(loading = false))
+        viewModelScope.launch {
             delay(600)
             _animationIn.value = true
             delay(6000)
             _animationIn.value = false
             delay(1000)
-            _pointsCircle.value = true
+            _pointsCircleIsVisible.value = true
         }
     }
 
@@ -78,12 +79,11 @@ class CharListFragmentViewModel @Inject constructor(
         }
     }
 
-
     fun getGestures() {
         viewModelScope.launch(IO) {
-            launch {
+
                 _gesturesList.value = gesturesProvider.getGestureList().map { it.toModel() }
-            }.join()
+
         }
     }
 }

@@ -15,7 +15,9 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -93,15 +95,45 @@ class CharListFragmentViewModelTest {
     }
 
     @Test
-    fun `check viewmodel init method`() = runTest {
+    fun `check received points by getUserPoints function`() = runTest {
         viewModel.userPoints.test {
             val points = awaitItem()
             assertThat(points == 10).isTrue()
         }
     }
 
+    @Test
+    fun `check charlist recieved`() = runTest {
+        viewModel.charList.test {
+            val charlist = awaitItem()
+            assertThat(charlist.isNotEmpty()).isTrue()
+            assertThat(charlist.size == 3).isTrue()
+        }
+    }
+
+    @Test
+    fun `check gestureList recieved`() = runBlocking {
+        viewModel.gesturesList.test {
+            var gesturesList = awaitItem()
+            assertThat(gesturesList.isEmpty()).isTrue()
+            viewModel.getGestures()
+            gesturesList = awaitItem()
+            assertThat(gesturesList.isNotEmpty()).isTrue()
+            assertThat(gesturesList.size == 3).isTrue()
+        }
+    }
+
+    @Test
+    fun `points circle becomes visible`() = runTest {
+        viewModel.pointsCircleIsVisible.test() {
+            var value = awaitItem()
+            assertThat(value).isFalse()
+            advanceTimeBy(7800)
+            value = awaitItem()
+            assertThat(value).isTrue()
+        }
+    }
     /** questionService.getQuestions() method must be checked as instrumented test to check
      * if the list was saved correctly into the DB
      */
-
 }

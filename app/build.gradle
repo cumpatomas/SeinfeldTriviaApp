@@ -14,8 +14,8 @@ android {
         applicationId "com.cumpatomas.seinfeldrecords"
         minSdk 28
         targetSdk 33
-        versionCode 11
-        versionName "2.0"
+        versionCode 13
+        versionName "2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
