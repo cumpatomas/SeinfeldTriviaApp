@@ -87,15 +87,21 @@ class QuizFragmentViewModel @Inject constructor(
                 _userPoints.value += points
                 launch {
                     updatePoints.invoke(_userPoints.value)
-                }.join()
+                }
                 getPoints.invoke()
             } else {
-                if (_userPoints.value >= MAX_POINTS) {
-                    _userPoints.value = MAX_POINTS
-                    updatePoints.invoke(_userPoints.value)
+                if (_userPoints.value + points >= MAX_POINTS) {
+                    launch {
+                        _userPoints.value = MAX_POINTS
+                        updatePoints.invoke(_userPoints.value)
+                    }
+
                 } else {
-                    _userPoints.value = ZERO
-                    updatePoints.invoke(_userPoints.value)
+                    launch {
+                        _userPoints.value = ZERO
+                        updatePoints.invoke(_userPoints.value)
+
+                    }
                 }
             }
         }
