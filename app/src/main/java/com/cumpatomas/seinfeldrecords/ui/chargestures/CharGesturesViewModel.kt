@@ -43,7 +43,7 @@ class CharGesturesViewModel @Inject constructor(
     val playing = _playing.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch() {
             _userPoints.value = getPoints.invoke()
             insertGesturesInDataBase.invoke()
         }
@@ -76,7 +76,7 @@ class CharGesturesViewModel @Inject constructor(
                 }.join()
                 getPoints.invoke()
             } else {
-                if (_userPoints.value >= MAX_POINTS) {
+                if (_userPoints.value + points >= MAX_POINTS) {
                     _userPoints.value = MAX_POINTS
                     updatePoints.invoke(_userPoints.value)
                 } else {
